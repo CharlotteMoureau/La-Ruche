@@ -203,4 +203,4 @@ Dat is handig om een afgewerkt bord te delen of te archiveren.
 - Als een pagina geblokkeerd lijkt, vernieuw de browser een keer.
 - Als u geen e-mail voor wachtwoordherstel ontvangt, controleer dan uw spammap.
 - Als een uitnodiging niet verschijnt, open de inbox na enkele seconden opnieuw.
-- Als u een probleem ondervindt dat niet wordt opgelost door de vorige stappen, neem dan contact op met het ondersteuningsteam via het e-mailadres dat wordt vermeld op de pagina \`Bug melden\` die toegankelijk is vanuit de voettekst. Geef zoveel mogelijk details om te helpen het probleem snel op te lossen.
+- Als u een probleem ondervindt dat niet wordt opgelost door de vorige stappen, neem dan contact op met het ondersteuningsteam via het e-mailadres dat wordt vermeld op de pagina `Bug melden` die toegankelijk is vanuit de voettekst. Geef zoveel mogelijk details om te helpen het probleem snel op te lossen.

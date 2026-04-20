@@ -203,4 +203,4 @@ Cela est utile pour partager ou archiver une planche finalisée.
 - Si une page semble bloquée, rechargez le navigateur une fois.
 - Si vous ne recevez pas l'email de réinitialisation, vérifiez vos courriers indésirables.
 - Si une invitation n'apparaît pas, rouvrez la boîte de réception après quelques secondes.
-- Si vous rencontrez un problème non résolu par les étapes précédentes, veuillez contacter l'équipe de support à l'adresse email indiquée sur la page \`Signaler un bug\` accessible depuis le pied de page. Fournissez autant de détails que possible pour aider à résoudre le problème rapidement.
+- Si vous rencontrez un problème non résolu par les étapes précédentes, veuillez contacter l'équipe de support à l'adresse email indiquée sur la page `Signaler un bug` accessible depuis le pied de page. Fournissez autant de détails que possible pour aider à résoudre le problème rapidement.

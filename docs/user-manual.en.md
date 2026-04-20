@@ -203,4 +203,4 @@ This is useful for sharing or archiving a finished board.
 - If a page seems blocked, refresh the browser once.
 - If you do not receive a password reset email, check your spam folder.
 - If an invitation does not appear, open the inbox again after a few seconds.
-- If you encounter an issue not resolved by the previous steps, please contact the support team at the email address provided on the \`Report a bug\` page accessible from the footer. Provide as much detail as possible to help resolve the issue quickly.
+- If you encounter an issue not resolved by the previous steps, please contact the support team at the email address provided on the `Report a bug` page accessible from the footer. Provide as much detail as possible to help resolve the issue quickly.
