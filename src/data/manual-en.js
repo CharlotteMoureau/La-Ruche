@@ -27,7 +27,7 @@ La Ruche helps you build a visual board with educational cards. You can move car
 3. Enter your password.
 4. Click the sign-in button.
 
-If you forgot your password, use \`Forgot password?\`. If email delivery is configured, you will receive a reset link. If not, contact your project administrator.
+If you forgot your password, use \`Forgot password?\`.
 
 ## Your profile
 
@@ -70,7 +70,7 @@ Useful things to know:
 
 - A hive is not shared automatically. You decide when to invite people.
 - If you try to leave with unsaved changes, the app warns you.
-- Some users can create a DCO hive. In that case, the available cards are adapted automatically.
+- Some users can create a specific hive (for example, Delegates to the Objectives Contract). In that case, the available cards are adapted automatically.
 
 ## Desktop vs Tablet
 
@@ -106,7 +106,7 @@ You can select multiple cards from the library:
 
 1. Tap on the cards you want to select in the library (a counter shows the number of selected cards)
 2. Once your cards are selected, tap the button to place them on the board or perform another action
-3. You can also select cards on the board by enabling the "Multi-select" toggle to move them together
+3. Once cards are placed on the board, you can select them directly by tapping on them. Tap a card to select it, then tap other cards to make a multiple selection. This selection allows you to, for example, send one or more cards back to the library, or move several cards together. Tap a card again to deselect it
 
 ## Add your own card
 
@@ -175,7 +175,7 @@ If someone shares a hive with you:
 2. Review the invitation.
 3. Accept or decline.
 
-Accepted hives appear in the shared section of your profile.
+Accepted hives appear in your profile with an icon and your role. You can also apply a filter to see only the hives shared with you.
 
 ## Export and download
 
@@ -189,18 +189,6 @@ Exports can include:
 
 This is useful for sharing or archiving a finished board.
 
-## Admin area
-
-Admin users have an extra administration page.
-
-From there, they can:
-
-- Search users
-- Search hives
-- Edit some user details
-- Rename hives
-- Delete users or hives
-
 ## Simple tips
 
 - Save before closing the page.
@@ -213,6 +201,7 @@ From there, they can:
 
 - If you cannot sign in, check your email address, username, and password.
 - If a page seems blocked, refresh the browser once.
-- If you do not receive a password reset email, check your spam folder and confirm that email sending is enabled for your environment.
+- If you do not receive a password reset email, check your spam folder.
 - If an invitation does not appear, open the inbox again after a few seconds.
+- If you encounter an issue not resolved by the previous steps, please contact the support team at the email address provided on the \`Report a bug\` page accessible from the footer. Provide as much detail as possible to help resolve the issue quickly.
 `;

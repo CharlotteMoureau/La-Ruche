@@ -27,7 +27,7 @@ La Ruche est un outil collaboratif conçu pour accompagner les acteurs du Parc
 3. Entrez votre mot de passe.
 4. Cliquez sur le bouton de connexion.
 
-Si vous avez oublié votre mot de passe, utilisez `Mot de passe oublié ?`. Si l'envoi d'emails est configuré, vous recevrez un lien de réinitialisation. Sinon, contactez l'administrateur du projet.
+Si vous avez oublié votre mot de passe, utilisez `Mot de passe oublié ?`.
 
 ## Votre profil
 
@@ -70,7 +70,7 @@ Points utiles :
 
 - Une ruche n'est pas partagée automatiquement. C'est vous qui invitez les autres personnes.
 - Si vous essayez de quitter avec des modifications non enregistrées, l'application vous avertit.
-- Certaines personnes peuvent créer une ruche DCO. Dans ce cas, les cartes disponibles sont adaptées automatiquement.
+- Certaines personnes peuvent créer une ruche spécifique (par exemple les Délégués au Contrat d'Objectifs). Dans ce cas, les cartes disponibles sont adaptées automatiquement.
 
 ## Bureau vs Tablette
 
@@ -106,7 +106,7 @@ Vous pouvez sélectionner plusieurs cartes depuis la bibliothèque :
 
 1. Cliquez sur les cartes que vous souhaitez sélectionner dans la bibliothèque (un compteur indique le nombre de cartes sélectionnées)
 2. Une fois vos cartes sélectionnées, cliquez sur le bouton pour les placer sur le plateau ou effectuer une autre action
-3. Vous pouvez aussi sélectionner des cartes sur le plateau en activant le bouton "Sélection" pour les déplacer ensemble
+3. Une fois les cartes placées sur le plateau, vous pouvez les sélectionner directement en cliquant dessus. Cliquez sur une carte pour la sélectionner, puis sur d’autres cartes pour effectuer une sélection multiple. Cette sélection permet par exemple de renvoyer une ou plusieurs cartes vers la bibliothèque, ou de déplacer plusieurs cartes ensemble. Cliquez à nouveau sur une carte pour la désélectionner
 
 ## Ajouter votre propre carte
 
@@ -175,7 +175,7 @@ Si une personne partage une ruche avec vous :
 2. Consultez l'invitation.
 3. Acceptez ou refusez.
 
-Les ruches acceptées apparaissent dans la partie partagée de votre profil.
+Les ruches acceptées apparaissent avec une icône et votre rôle dans votre profil. Vous pouvez aussi appliquer un filtre pour voir uniquement les ruches partagées avec vous.
 
 ## Export et téléchargement
 
@@ -192,7 +192,7 @@ Cela est utile pour partager ou archiver une planche finalisée.
 ## Conseils simples
 
 - Enregistrez avant de fermer la page.
-- Donnez des titres clairs a vos ruches pour les retrouver plus facilement.
+- Donnez des titres clairs à vos ruches pour les retrouver plus facilement.
 - Consultez votre boîte de réception si vous attendez une ruche partagée.
 - Utilisez les notes sur carte pour un détail précis et les commentaires de ruche pour la discussion de groupe.
 - Changez la langue depuis le pied de page si nécessaire, et utilisez les liens `RGPD / Confidentialité` et `En cours de développement`.
@@ -201,5 +201,6 @@ Cela est utile pour partager ou archiver une planche finalisée.
 
 - Si vous ne pouvez pas vous connecter, vérifiez votre email, votre nom d'utilisateur et votre mot de passe.
 - Si une page semble bloquée, rechargez le navigateur une fois.
-- Si vous ne recevez pas l'email de réinitialisation, vérifiez vos courriers indésirables et que l'envoi d'emails est bien activé dans votre environnement.
+- Si vous ne recevez pas l'email de réinitialisation, vérifiez vos courriers indésirables.
 - Si une invitation n'apparaît pas, rouvrez la boîte de réception après quelques secondes.
+- Si vous rencontrez un problème non résolu par les étapes précédentes, veuillez contacter l'équipe de support à l'adresse email indiquée sur la page \`Signaler un bug\` accessible depuis le pied de page. Fournissez autant de détails que possible pour aider à résoudre le problème rapidement.

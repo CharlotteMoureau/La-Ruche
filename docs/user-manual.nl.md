@@ -27,7 +27,7 @@ La Ruche is een samenwerkingsinstrument dat is ontwikkeld om alle betrokkenen bi
 3. Vul uw wachtwoord in.
 4. Klik op de aanmeldknop.
 
-Bent u uw wachtwoord vergeten, gebruik dan `Wachtwoord vergeten?`. Als e-mailverzending is geconfigureerd, ontvangt u een resetlink. Zo niet, neem contact op met de projectbeheerder.
+Bent u uw wachtwoord vergeten, gebruik dan `Wachtwoord vergeten?`.
 
 ## Uw profiel
 
@@ -70,7 +70,7 @@ Handige punten:
 
 - Een ruche wordt niet automatisch gedeeld. U beslist zelf wanneer u andere personen uitnodigt.
 - Als u probeert te vertrekken met niet-opgeslagen wijzigingen, krijgt u een waarschuwing.
-- Sommige gebruikers kunnen een DCO-ruche maken. In dat geval worden de beschikbare kaarten automatisch aangepast.
+- Sommige gebruikers kunnen een specifieke ruche maken (bijvoorbeeld de Delegates to the Objectives Contract). In dat geval worden de beschikbare kaarten automatisch aangepast.
 
 ## Bureau vs Tablet
 
@@ -106,7 +106,7 @@ U kunt meerdere kaarten uit de bibliotheek selecteren:
 
 1. Tik op de kaarten die u wilt selecteren in de bibliotheek (een teller toont het aantal geselecteerde kaarten)
 2. Zodra uw kaarten zijn geselecteerd, tikt u op de knop om ze op het bord te plaatsen of een ander actie uit te voeren
-3. U kunt ook kaarten op het bord selecteren door de "Meer keuze"-schakelaar in te schakelen om ze samen te verplaatsen
+3. Zodra kaarten op het bord zijn geplaatst, kunt u ze direct selecteren door erop te tikken. Tik op een kaart om deze te selecteren, tik vervolgens op andere kaarten om een meervoudige selectie te maken. Deze selectie stelt u bijvoorbeeld in staat om een of meer kaarten terug naar de bibliotheek te sturen, of meerdere kaarten samen te verplaatsen. Tik nogmaals op een kaart om deze te deselecteren
 
 ## Een eigen kaart toevoegen
 
@@ -175,7 +175,7 @@ Als iemand een ruche met u deelt:
 2. Bekijk de uitnodiging.
 3. Aanvaard of weiger.
 
-Aanvaarde ruches verschijnen in het gedeelde gedeelte van uw profiel.
+Geaccepteerde ruches verschijnen in uw profiel met een pictogram en uw rol. U kunt ook een filter toepassen om alleen de ruches te zien die met u gedeeld zijn.
 
 ## Export en download
 
@@ -201,5 +201,6 @@ Dat is handig om een afgewerkt bord te delen of te archiveren.
 
 - Als u niet kunt aanmelden, controleer dan uw e-mailadres, gebruikersnaam en wachtwoord.
 - Als een pagina geblokkeerd lijkt, vernieuw de browser een keer.
-- Als u geen e-mail voor wachtwoordherstel ontvangt, controleer dan uw spammap en bevestig dat e-mailverzending in uw omgeving is ingeschakeld.
+- Als u geen e-mail voor wachtwoordherstel ontvangt, controleer dan uw spammap.
 - Als een uitnodiging niet verschijnt, open de inbox na enkele seconden opnieuw.
+- Als u een probleem ondervindt dat niet wordt opgelost door de vorige stappen, neem dan contact op met het ondersteuningsteam via het e-mailadres dat wordt vermeld op de pagina \`Bug melden\` die toegankelijk is vanuit de voettekst. Geef zoveel mogelijk details om te helpen het probleem snel op te lossen.
