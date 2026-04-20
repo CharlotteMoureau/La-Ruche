@@ -161,8 +161,16 @@
   border-radius: 3px;
 }
 
+
 .card-library .library-card.free-space {
   width: 100%;
+}
+
+.card-library .library-card.library-card--disabled {
+  opacity: 0.5;
+  filter: grayscale(0.7);
+  pointer-events: none;
+  cursor: not-allowed !important;
 }
 
 .card-library__empty-search {

@@ -179,9 +179,10 @@ export default function CardLibrary({
               </h3>
               <div className="card-list">
                 <div
-                  className={`library-card free-space ${isFreeCardSelected ? "library-card--selected" : ""}`.trim()}
+                  className={`library-card free-space${isFreeCardSelected ? " library-card--selected" : ""}${userCards >= 10 ? " library-card--disabled" : ""}`.trim()}
                   onClick={handleFreeSpaceClick}
-                  style={{ cursor: canEdit ? "pointer" : "not-allowed" }}
+                  style={{ cursor: canEdit && userCards < 10 ? "pointer" : "not-allowed" }}
+                  aria-disabled={userCards >= 10}
                 >
                   <FreeHexCard
                     card={{
