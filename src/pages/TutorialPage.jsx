@@ -23,7 +23,7 @@ export default function TutorialPage() {
         <iframe
           width="100%"
           height="600"
-          src="https://www.youtube.com/embed/WI2ICPIcDiY"
+          src="https://www.youtube.com/embed/Qi3h2966kvY"
           title="La Ruche Tutorial"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
