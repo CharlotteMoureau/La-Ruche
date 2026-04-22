@@ -40,15 +40,11 @@ body.editor-route #root {
   flex-wrap: wrap;
   flex-shrink: 0;
 
-  input {
+  > .editor-topbar-main > label > input {
     margin-left: 8px;
     border: 1px solid #ccc;
     border-radius: 8px;
     padding: 8px;
-  }
-
-  #toolbar-invite-email input {
-    margin-left: 0 !important;
   }
 }
 
