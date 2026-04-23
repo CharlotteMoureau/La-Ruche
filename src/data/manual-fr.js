@@ -155,7 +155,7 @@ Vous pouvez inviter d'autres utilisateurs par email.
 Rôles possibles :
 
 - \`Administrateur\` : peut gérer la collaboration sur la ruche
-- \`Collaborateur (peut éditer)\` : peut modifier la ruche
+- \`Éditeur\` : peut modifier la ruche
 - \`Commentaire uniquement\` : peut discuter sans modifier le plateau
 - \`Lecture seule\` : peut seulement consulter
 

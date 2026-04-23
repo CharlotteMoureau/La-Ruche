@@ -155,7 +155,7 @@ U kunt andere gebruikers per e-mail uitnodigen.
 Mogelijke rollen:
 
 - \`Beheerder\`: kan de samenwerking op de ruche beheren
-- \`Medewerker (kan bewerken)\`: kan de ruche wijzigen
+- \`Editor\`: kan de ruche wijzigen
 - \`Alleen reacties\`: kan bespreken maar het bord niet wijzigen
 - \`Alleen lezen\`: kan alleen bekijken
 

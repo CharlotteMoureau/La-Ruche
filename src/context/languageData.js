@@ -491,8 +491,8 @@ export const messages = {
       conflictMessage:
         "Un autre collaborateur a enregistré cette ruche avant vous. Rechargez la dernière version ou créez une copie pour conserver votre travail.",
       conflictReload: "Recharger la dernière version",
-      activeEditorsOthers: "Collaborateurs en cours d'édition : {names}",
-      activeEditorsOnlyYou: "Vous éditez actuellement cette ruche.",
+      activeEditorsOthers: "Collaborateurs en cours de modification : {names}",
+      activeEditorsOnlyYou: "Vous modifiez actuellement cette ruche.",
     },
     workspace: {
       cardNoteTitle: "Note de carte",
@@ -561,7 +561,7 @@ export const messages = {
       confirmLeave: "Quitter",
       exportTitle: "Export de la ruche",
       roleAdmin: "Administrateur",
-      roleEdit: "Collaborateur (peut éditer)",
+      roleEdit: "Éditeur",
       roleComment: "Commentaire uniquement",
       roleRead: "Lecture seule",
       inviteRequiredEmail:
@@ -1129,7 +1129,7 @@ export const messages = {
       confirmLeave: "Leave",
       exportTitle: "Hive export",
       roleAdmin: "Administrator",
-      roleEdit: "Collaborator (can edit)",
+      roleEdit: "Editor",
       roleComment: "Comment only",
       roleRead: "Read only",
       inviteRequiredEmail: "Cannot send invitation: email is required.",
@@ -1698,7 +1698,7 @@ export const messages = {
       confirmLeave: "Verlaten",
       exportTitle: "Bijenkorf-export",
       roleAdmin: "Beheerder",
-      roleEdit: "Medewerker (kan bewerken)",
+      roleEdit: "Editor",
       roleComment: "Alleen reacties",
       roleRead: "Alleen lezen",
       inviteRequiredEmail:

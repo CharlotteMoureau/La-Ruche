@@ -155,7 +155,7 @@ You can invite other users by email.
 Possible access roles:
 
 - \`Administrator\`: can manage collaboration on the hive
-- \`Collaborator (can edit)\`: can modify the hive
+- \`Editor\`: can modify the hive
 - \`Comment only\`: can discuss but not edit the board
 - \`Read only\`: can only view
 
