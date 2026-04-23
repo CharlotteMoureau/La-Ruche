@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import process from "node:process";
 import { Router } from "express";
 import { z } from "zod";
+import { sendCollaboratorInvitationEmail } from "../lib/email.js";
 import { HIVE_KINDS, normalizeHiveKind } from "../lib/hives.js";
 import { prisma } from "../lib/prisma.js";
 import { requireAuth } from "../middleware/auth.js";
@@ -93,6 +94,18 @@ function mapInvitationRow(row) {
       username: row.inviterUsername,
       email: row.inviterEmail,
     },
+  };
+}
+
+function buildInvitationEmailPayload({ hive, invitee, inviter, role }) {
+  const appUrl = globalThis.process?.env.APP_URL || "http://127.0.0.1:5173";
+  return {
+    to: invitee.email,
+    link: `${appUrl}/inbox`,
+    locale: "fr",
+    hiveTitle: hive.title,
+    inviterName: inviter.username || inviter.email || "Un collaborateur",
+    role,
   };
 }
 
@@ -950,6 +963,12 @@ hivesRouter.post("/:id/collaborators", async (req, res) => {
   `;
 
   const normalizedRole = normalizeInvitationRole(parsed.data.role);
+  const invitationEmailPayload = buildInvitationEmailPayload({
+    hive,
+    invitee,
+    inviter: req.user,
+    role: normalizedRole,
+  });
 
   if (pendingRows[0]?.id) {
     await prisma.$executeRaw`
@@ -959,6 +978,12 @@ hivesRouter.post("/:id/collaborators", async (req, res) => {
           "updatedAt" = CURRENT_TIMESTAMP
       WHERE "id" = ${pendingRows[0].id}
     `;
+
+    try {
+      await sendCollaboratorInvitationEmail(invitationEmailPayload);
+    } catch (error) {
+      console.error("Failed to send collaborator invitation email", error);
+    }
 
     return res.status(200).json({
       id: invitee.id,
@@ -983,6 +1008,12 @@ hivesRouter.post("/:id/collaborators", async (req, res) => {
       CURRENT_TIMESTAMP
     )
   `;
+
+  try {
+    await sendCollaboratorInvitationEmail(invitationEmailPayload);
+  } catch (error) {
+    console.error("Failed to send collaborator invitation email", error);
+  }
 
   return res.status(201).json({
     id: invitee.id,

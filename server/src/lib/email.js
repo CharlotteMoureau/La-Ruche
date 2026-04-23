@@ -73,9 +73,122 @@ const RESET_EMAIL_COPY = {
   },
 };
 
+const INVITATION_EMAIL_COPY = {
+  fr: {
+    lang: "fr",
+    subject: "Invitation à collaborer - La Ruche",
+    preview: "Vous avez reçu une invitation à collaborer sur une ruche.",
+    title: "Invitation à collaborer",
+    greeting: "Bonjour,",
+    intro:
+      "{inviterName} vous a invité(e) à collaborer sur la ruche \"{hiveTitle}\" avec le rôle \"{roleLabel}\".",
+    button: "Voir mes invitations",
+    fallback:
+      "Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :",
+    outro:
+      "Connectez-vous à La Ruche pour accepter ou refuser cette invitation.",
+    textLines: [
+      "Bonjour,",
+      "",
+      "{inviterName} vous a invité(e) à collaborer sur la ruche \"{hiveTitle}\".",
+      "Rôle proposé : {roleLabel}",
+      "Consultez vos invitations : {link}",
+      "",
+      "Connectez-vous à La Ruche pour accepter ou refuser cette invitation.",
+    ],
+  },
+  en: {
+    lang: "en",
+    subject: "Collaboration invitation - La Ruche",
+    preview: "You received an invitation to collaborate on a La Ruche hive.",
+    title: "Collaboration invitation",
+    greeting: "Hello,",
+    intro:
+      "{inviterName} invited you to collaborate on the hive \"{hiveTitle}\" with the \"{roleLabel}\" role.",
+    button: "View my invitations",
+    fallback:
+      "If the button does not work, copy and paste this link into your browser:",
+    outro:
+      "Sign in to La Ruche to accept or decline this invitation.",
+    textLines: [
+      "Hello,",
+      "",
+      "{inviterName} invited you to collaborate on the hive \"{hiveTitle}\".",
+      "Role: {roleLabel}",
+      "View your invitations: {link}",
+      "",
+      "Sign in to La Ruche to accept or decline this invitation.",
+    ],
+  },
+  nl: {
+    lang: "nl",
+    subject: "Uitnodiging om samen te werken - La Ruche",
+    preview: "Je hebt een uitnodiging ontvangen om samen te werken aan een La Ruche-korf.",
+    title: "Uitnodiging om samen te werken",
+    greeting: "Hallo,",
+    intro:
+      "{inviterName} heeft je uitgenodigd om samen te werken aan de korf \"{hiveTitle}\" met de rol \"{roleLabel}\".",
+    button: "Mijn uitnodigingen bekijken",
+    fallback:
+      "Werkt de knop niet? Kopieer en plak deze link in je browser:",
+    outro:
+      "Meld je aan bij La Ruche om deze uitnodiging te accepteren of te weigeren.",
+    textLines: [
+      "Hallo,",
+      "",
+      "{inviterName} heeft je uitgenodigd om samen te werken aan de korf \"{hiveTitle}\".",
+      "Rol: {roleLabel}",
+      "Bekijk je uitnodigingen: {link}",
+      "",
+      "Meld je aan bij La Ruche om deze uitnodiging te accepteren of te weigeren.",
+    ],
+  },
+};
+
 function getLocaleCopy(locale) {
   const normalizedLocale = String(locale || "fr").toLowerCase();
   return RESET_EMAIL_COPY[normalizedLocale] || RESET_EMAIL_COPY.fr;
+}
+
+function getInvitationLocaleCopy(locale) {
+  const normalizedLocale = String(locale || "fr").toLowerCase();
+  return INVITATION_EMAIL_COPY[normalizedLocale] || INVITATION_EMAIL_COPY.fr;
+}
+
+function fillTemplate(template, values) {
+  return String(template).replace(/\{(\w+)\}/g, (_, key) => values[key] ?? "");
+}
+
+function getRoleLabel(role, locale) {
+  const normalizedRole = String(role || "READ").toUpperCase();
+  const normalizedLocale = String(locale || "fr").toLowerCase();
+
+  const labels = {
+    fr: {
+      ADMIN: "Administrateur",
+      EDITOR: "Éditeur",
+      COMMENT: "Commentateur",
+      READ: "Lecteur",
+    },
+    en: {
+      ADMIN: "Administrator",
+      EDITOR: "Editor",
+      COMMENT: "Commenter",
+      READ: "Reader",
+    },
+    nl: {
+      ADMIN: "Beheerder",
+      EDITOR: "Bewerker",
+      COMMENT: "Reageerder",
+      READ: "Lezer",
+    },
+  };
+
+  return (
+    labels[normalizedLocale]?.[normalizedRole] ||
+    labels.fr[normalizedRole] ||
+    normalizedRole
+  );
 }
 
 function getMailerSendConfig() {
@@ -186,6 +299,104 @@ function buildResetPasswordHtml({ link, locale }) {
   `;
 }
 
+function buildCollaboratorInvitationHtml({
+  link,
+  locale,
+  hiveTitle,
+  inviterName,
+  role,
+}) {
+  const copy = getInvitationLocaleCopy(locale);
+  const year = new Date().getFullYear();
+  const roleLabel = getRoleLabel(role, locale);
+  const contentValues = {
+    inviterName,
+    hiveTitle,
+    roleLabel,
+    link,
+  };
+
+  return `
+  <!doctype html>
+  <html lang="${copy.lang}">
+    <head>
+      <meta charset="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>${copy.subject}</title>
+    </head>
+    <body style="margin:0;padding:0;background:#f7f3ee;font-family:'Segoe UI',Arial,sans-serif;color:#575756;">
+      <div style="display:none;max-height:0;overflow:hidden;opacity:0;visibility:hidden;">
+        ${copy.preview}
+      </div>
+
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f7f3ee;padding:28px 12px;">
+        <tr>
+          <td align="center">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border:1px solid #e5ddd1;border-radius:16px;overflow:hidden;">
+              <tr>
+                <td style="background:#312783;padding:22px 24px;">
+                  <span style="display:inline-block;color:#ffffff;font-size:22px;font-weight:700;vertical-align:middle;">La Ruche</span>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:30px 24px 18px 24px;">
+                  <h1 style="margin:0 0 14px 0;color:#312783;font-size:24px;line-height:1.25;">${copy.title}</h1>
+                  <p style="margin:0 0 12px 0;font-size:16px;line-height:1.6;color:#575756;">${copy.greeting}</p>
+                  <p style="margin:0 0 12px 0;font-size:16px;line-height:1.6;color:#575756;">
+                    ${fillTemplate(copy.intro, contentValues)}
+                  </p>
+                  <p style="margin:0;font-size:15px;line-height:1.6;color:#575756;">
+                    ${copy.outro}
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:0 24px 8px 24px;">
+                  <table role="presentation" cellspacing="0" cellpadding="0" style="margin:0;">
+                    <tr>
+                      <td align="center" style="border-radius:999px;background:#f2b500;">
+                        <a href="${link}" style="display:inline-block;padding:12px 24px;font-size:16px;font-weight:700;color:#222222;text-decoration:none;border-radius:999px;">
+                          ${copy.button}
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:14px 24px 20px 24px;">
+                  <p style="margin:0 0 10px 0;font-size:14px;line-height:1.6;color:#575756;">
+                    ${copy.fallback}
+                  </p>
+                  <p style="margin:0;padding:10px 12px;border:1px solid #dfd5c7;border-radius:10px;background:#fbf8f3;word-break:break-all;font-size:13px;line-height:1.5;color:#312783;">
+                    ${link}
+                  </p>
+                </td>
+              </tr>
+
+              <tr>
+                <td style="padding:18px 24px 28px 24px;border-top:1px solid #ece4d8;">
+                  <p style="margin:0;font-size:12px;line-height:1.6;color:#8b857a;">
+                    © ${year} La Ruche
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+  </html>
+  `;
+}
+
+function getDefaultFrom() {
+  return (env.SMTP_FROM || "laruche.support@cfwb.be").trim();
+}
+
 async function getTransport() {
   if (transportPromise) {
     return transportPromise;
@@ -260,13 +471,7 @@ async function sendWithMailerSend({ to, from, subject, text, html }) {
   return true;
 }
 
-export async function sendResetPasswordEmail({ to, link, locale }) {
-  const copy = getLocaleCopy(locale);
-  const from = (env.SMTP_FROM || "no-reply@ruche.local").trim();
-  const subject = copy.subject;
-  const text = copy.textLines.map((line) => line.replace("{link}", link)).join("\n");
-  const html = buildResetPasswordHtml({ link, locale });
-
+async function sendEmail({ to, from, subject, text, html, logLabel, logValue }) {
   const sentByApi = await sendWithMailerSend({ to, from, subject, text, html });
   if (sentByApi) {
     return;
@@ -274,7 +479,9 @@ export async function sendResetPasswordEmail({ to, link, locale }) {
 
   const transport = await getTransport();
   if (!transport) {
-    console.info(`[RESET PASSWORD LINK for ${to}] ${link}`);
+    if (logLabel && logValue) {
+      console.info(`[${logLabel} for ${to}] ${logValue}`);
+    }
     return;
   }
 
@@ -284,12 +491,71 @@ export async function sendResetPasswordEmail({ to, link, locale }) {
     subject,
     text,
     html,
+    textEncoding: "base64",
   });
 
   if (transport.kind === "ethereal") {
     const previewUrl = nodemailer.getTestMessageUrl(info);
     if (previewUrl) {
-      console.info(`[RESET EMAIL PREVIEW for ${to}] ${previewUrl}`);
+      console.info(`[${logLabel || "EMAIL PREVIEW"} for ${to}] ${previewUrl}`);
     }
   }
+}
+
+export async function sendResetPasswordEmail({ to, link, locale }) {
+  const copy = getLocaleCopy(locale);
+  const from = getDefaultFrom();
+  const subject = copy.subject;
+  const text = copy.textLines.map((line) => line.replace("{link}", link)).join("\n");
+  const html = buildResetPasswordHtml({ link, locale });
+
+  await sendEmail({
+    to,
+    from,
+    subject,
+    text,
+    html,
+    logLabel: "RESET EMAIL PREVIEW",
+    logValue: link,
+  });
+}
+
+export async function sendCollaboratorInvitationEmail({
+  to,
+  link,
+  locale,
+  hiveTitle,
+  inviterName,
+  role,
+}) {
+  const copy = getInvitationLocaleCopy(locale);
+  const from = getDefaultFrom();
+  const roleLabel = getRoleLabel(role, locale);
+  const contentValues = {
+    inviterName,
+    hiveTitle,
+    roleLabel,
+    link,
+  };
+  const subject = copy.subject;
+  const text = copy.textLines
+    .map((line) => fillTemplate(line, contentValues))
+    .join("\n");
+  const html = buildCollaboratorInvitationHtml({
+    link,
+    locale,
+    hiveTitle,
+    inviterName,
+    role,
+  });
+
+  await sendEmail({
+    to,
+    from,
+    subject,
+    text,
+    html,
+    logLabel: "COLLABORATION INVITE EMAIL PREVIEW",
+    logValue: link,
+  });
 }
