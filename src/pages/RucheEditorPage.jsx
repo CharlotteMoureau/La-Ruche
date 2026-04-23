@@ -832,6 +832,23 @@ export default function RucheEditorPage() {
       const baseTitle =
         title.trim() || hive?.title?.trim() || t("editor.newHiveTitle");
       const copyTitle = `${baseTitle} (${t("profile.copySuffix")})`;
+      let boardPreviewImage;
+
+      try {
+        const boardNode = document.querySelector(".hive-board");
+        if (boardNode) {
+          boardPreviewImage = await captureBoardPreviewImage(boardNode, {
+            maxWidth: 800,
+            maxHeight: 450,
+            sourceScale: 2,
+            quality: 0.76,
+            maxBytes: PREVIEW_MAX_BYTES,
+            boardData,
+          });
+        }
+      } catch {
+        boardPreviewImage = undefined;
+      }
 
       const created = await apiFetch("/hives", {
         method: "POST",
@@ -840,6 +857,7 @@ export default function RucheEditorPage() {
           title: copyTitle,
           kind: hiveKind,
           boardData,
+          boardPreviewImage,
         },
       });
 
