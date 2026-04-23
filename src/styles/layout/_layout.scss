@@ -32,6 +32,12 @@
   }
 }
 
+.site-header__main-leading {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .site-nav {
   display: flex;
   align-items: center;
@@ -244,6 +250,31 @@
   }
 }
 
+.header-account-button {
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: $jaune;
+  color: #222;
+  cursor: pointer;
+}
+
+.header-mobile-account-wrap {
+  display: none;
+}
+
+.header-mobile-account-toggle {
+  min-width: 42px;
+  border-radius: 12px;
+  justify-content: center;
+  padding: 8px 10px;
+}
+
+.header-dropdown-menu--mobile-account {
+  right: 0;
+  min-width: min(84vw, 320px);
+}
+
 .inbox-link {
   position: relative;
 }
@@ -394,6 +425,36 @@
   .app {
     height: auto;
     min-height: 70vh;
+  }
+}
+
+@media (max-width: 768px) {
+  .site-header {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .site-header__main-leading {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .site-nav {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .site-nav .header-account-link {
+    display: none;
+  }
+
+  .header-mobile-account-wrap {
+    display: inline-flex;
+  }
+
+  .header-dropdown-menu--mobile-account {
+    min-width: min(86vw, 320px);
+    max-width: calc(100vw - 24px);
   }
 }
 

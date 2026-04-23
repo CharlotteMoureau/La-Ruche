@@ -30,20 +30,22 @@ export default function AppHeader() {
   const [pendingInvitesCount, setPendingInvitesCount] = useState(0);
   const [editorHeaderState, setEditorHeaderState] = useState(null);
   const [isTabletMenuOpen, setIsTabletMenuOpen] = useState(false);
+  const [isMobileAccountMenuOpen, setIsMobileAccountMenuOpen] = useState(false);
   const navRef = useRef(null);
 
   useEffect(() => {
-    if (!isTabletMenuOpen) return;
+    if (!isTabletMenuOpen && !isMobileAccountMenuOpen) return;
     const handleClickOutside = (event) => {
       if (navRef.current && !navRef.current.contains(event.target)) {
         setIsTabletMenuOpen(false);
+        setIsMobileAccountMenuOpen(false);
       }
     };
     document.addEventListener("pointerdown", handleClickOutside);
     return () => {
       document.removeEventListener("pointerdown", handleClickOutside);
     };
-  }, [isTabletMenuOpen]);
+  }, [isMobileAccountMenuOpen, isTabletMenuOpen]);
 
   const isEditorRoute =
     location.pathname === "/hives/new" ||
@@ -137,6 +139,10 @@ export default function AppHeader() {
     if (useTabletEditorHeader) return;
     setIsTabletMenuOpen(false);
   }, [useTabletEditorHeader]);
+
+  useEffect(() => {
+    setIsMobileAccountMenuOpen(false);
+  }, [location.pathname, isAuthenticated]);
 
   const dispatchEditorAction = (type) => {
     window.dispatchEvent(
@@ -326,18 +332,88 @@ export default function AppHeader() {
         </>
       ) : (
         <>
-          <Link to={brandTarget} className="brand-link">
-            <img src="/Logo ruche alvéoles-01.png" alt="logo ruche" />
-            <h1>La Ruche</h1>
-          </Link>
+          <div className="site-header__main-leading" ref={navRef}>
+            <Link to={brandTarget} className="brand-link">
+              <img src="/Logo ruche alvéoles-01.png" alt="logo ruche" />
+              <h1>La Ruche</h1>
+            </Link>
 
-          <nav className="site-nav" ref={navRef}>
+            {isAuthenticated && !isAdmin ? (
+              <div className="header-dropdown-wrap header-mobile-account-wrap">
+                <button
+                  type="button"
+                  className="header-dropdown-toggle header-mobile-account-toggle"
+                  aria-label={t("header.accountMenu")}
+                  aria-expanded={isMobileAccountMenuOpen}
+                  onClick={() => {
+                    setIsMobileAccountMenuOpen((open) => !open);
+                  }}
+                >
+                  <FontAwesomeIcon icon={faBars} />
+                </button>
+                {isMobileAccountMenuOpen ? (
+                  <div className="header-dropdown-menu header-dropdown-menu--mobile-account">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileAccountMenuOpen(false);
+                        if (shouldGuardHeaderNavigation()) {
+                          requestEditorLeave({ type: "route", to: "/profile" });
+                          return;
+                        }
+                        navigate("/profile");
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faUser} />
+                      {t("header.profile")}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileAccountMenuOpen(false);
+                        if (shouldGuardHeaderNavigation()) {
+                          requestEditorLeave({ type: "route", to: "/inbox" });
+                          return;
+                        }
+                        navigate("/inbox");
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faEnvelope} />
+                      {t("header.inbox")}
+                      {pendingInvitesCount > 0 ? (
+                        <span className="inbox-badge">
+                          {pendingInvitesCount}
+                        </span>
+                      ) : null}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsMobileAccountMenuOpen(false);
+                        if (shouldGuardHeaderNavigation()) {
+                          requestEditorLeave({ type: "logout" });
+                          return;
+                        }
+                        logout();
+                        navigate("/");
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faRightFromBracket} />
+                      {t("header.logout")}
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </div>
+
+          <nav className="site-nav">
             {isAuthenticated ? (
               <>
                 {!isAdmin ? (
                   <Link
                     to="/profile"
-                    className={`header-nav-link${location.pathname === "/profile" ? " is-active" : ""}`}
+                    className={`header-nav-link header-account-link${location.pathname === "/profile" ? " is-active" : ""}`}
                     onClick={(event) => {
                       if (!shouldGuardHeaderNavigation()) return;
                       event.preventDefault();
@@ -351,7 +427,7 @@ export default function AppHeader() {
                 {!isAdmin ? (
                   <Link
                     to="/inbox"
-                    className={`header-nav-link inbox-link${location.pathname === "/inbox" ? " is-active" : ""}`}
+                    className={`header-nav-link inbox-link header-account-link${location.pathname === "/inbox" ? " is-active" : ""}`}
                     onClick={(event) => {
                       if (!shouldGuardHeaderNavigation()) return;
                       event.preventDefault();
@@ -368,6 +444,7 @@ export default function AppHeader() {
                 {isAdmin ? <Link to="/admin">{t("header.admin")}</Link> : null}
                 <button
                   type="button"
+                  className={`header-account-button${isAdmin ? "" : " header-account-link"}`}
                   onClick={() => {
                     if (shouldGuardHeaderNavigation()) {
                       requestEditorLeave({ type: "logout" });
