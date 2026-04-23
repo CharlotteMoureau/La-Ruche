@@ -76,12 +76,12 @@ const RESET_EMAIL_COPY = {
 const INVITATION_EMAIL_COPY = {
   fr: {
     lang: "fr",
-    subject: "Invitation à collaborer - La Ruche",
-    preview: "Vous avez reçu une invitation à collaborer sur une ruche.",
-    title: "Invitation à collaborer",
+    subject: "Invitation à construire un projet culturel et artistique - La Ruche",
+    preview: "Vous avez reçu une invitation à co-construire une ruche.",
+    title: "Invitation à participer à la co-construction d'une ruche",
     greeting: "Bonjour,",
     intro:
-      "{inviterName} vous a invité(e) à collaborer sur la ruche \"{hiveTitle}\" avec le rôle \"{roleLabel}\".",
+      "{inviterName} vous a ajouté(e) sur sa ruche \"{hiveTitle}\" en tant que \"{roleLabel}\".",
     button: "Voir mes invitations",
     fallback:
       "Si le bouton ne fonctionne pas, copiez et collez ce lien dans votre navigateur :",
@@ -90,7 +90,7 @@ const INVITATION_EMAIL_COPY = {
     textLines: [
       "Bonjour,",
       "",
-      "{inviterName} vous a invité(e) à collaborer sur la ruche \"{hiveTitle}\".",
+      "{inviterName} vous a ajouté(e) sur sa ruche \"{hiveTitle}\" en tant que \"{roleLabel}\".",
       "Rôle proposé : {roleLabel}",
       "Consultez vos invitations : {link}",
       "",
@@ -99,12 +99,12 @@ const INVITATION_EMAIL_COPY = {
   },
   en: {
     lang: "en",
-    subject: "Collaboration invitation - La Ruche",
-    preview: "You received an invitation to collaborate on a La Ruche hive.",
-    title: "Collaboration invitation",
+    subject: "Invitation to participate in a cultural and artistic project - La Ruche",
+    preview: "You received an invitation to co-construct a La Ruche hive.",
+    title: "Invitation to participate in a cultural and artistic project",
     greeting: "Hello,",
     intro:
-      "{inviterName} invited you to collaborate on the hive \"{hiveTitle}\" with the \"{roleLabel}\" role.",
+      "{inviterName} invited you to co-construct the hive \"{hiveTitle}\" as \"{roleLabel}\".",
     button: "View my invitations",
     fallback:
       "If the button does not work, copy and paste this link into your browser:",
@@ -113,7 +113,7 @@ const INVITATION_EMAIL_COPY = {
     textLines: [
       "Hello,",
       "",
-      "{inviterName} invited you to collaborate on the hive \"{hiveTitle}\".",
+      "{inviterName} invited you to co-construct the hive \"{hiveTitle}\" as \"{roleLabel}\".",
       "Role: {roleLabel}",
       "View your invitations: {link}",
       "",
@@ -122,12 +122,12 @@ const INVITATION_EMAIL_COPY = {
   },
   nl: {
     lang: "nl",
-    subject: "Uitnodiging om samen te werken - La Ruche",
-    preview: "Je hebt een uitnodiging ontvangen om samen te werken aan een La Ruche-korf.",
-    title: "Uitnodiging om samen te werken",
+    subject: "Uitnodiging om deel te nemen aan een cultureel en artistiek project - La Ruche",
+    preview: "Je hebt een uitnodiging ontvangen om deel te nemen aan een La Ruche-korf.",
+    title: "Uitnodiging om deel te nemen aan een cultureel en artistiek project",
     greeting: "Hallo,",
     intro:
-      "{inviterName} heeft je uitgenodigd om samen te werken aan de korf \"{hiveTitle}\" met de rol \"{roleLabel}\".",
+      "{inviterName} heeft je uitgenodigd om deel te nemen aan de korf \"{hiveTitle}\" als \"{roleLabel}\".",
     button: "Mijn uitnodigingen bekijken",
     fallback:
       "Werkt de knop niet? Kopieer en plak deze link in je browser:",
@@ -136,7 +136,7 @@ const INVITATION_EMAIL_COPY = {
     textLines: [
       "Hallo,",
       "",
-      "{inviterName} heeft je uitgenodigd om samen te werken aan de korf \"{hiveTitle}\".",
+      "{inviterName} heeft je uitgenodigd om deel te nemen aan de korf \"{hiveTitle}\" als \"{roleLabel}\".",
       "Rol: {roleLabel}",
       "Bekijk je uitnodigingen: {link}",
       "",
