@@ -10,6 +10,7 @@ import { useAuth } from "../context/AuthContext";
 import { useLanguage } from "../context/LanguageContext";
 import { HIVE_KINDS, isDcoRole } from "../lib/hives";
 import UnifiedPromptModal from "../components/UnifiedPromptModal";
+import PageLoader from "../components/PageLoader";
 
 const HIVE_TITLE_MAX_LENGTH = 100;
 
@@ -61,8 +62,7 @@ export default function LandingPage() {
   if (isLoading) {
     return (
       <section className="page-shell">
-        <h2>{t("landing.title")}</h2>
-        <p>{t("landing.loading")}</p>
+        <PageLoader title={t("landing.loading")} />
       </section>
     );
   }
