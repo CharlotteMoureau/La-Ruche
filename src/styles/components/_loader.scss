@@ -127,6 +127,18 @@
   font-size: 0.95rem;
 }
 
+.page-loader__slow-note {
+  margin: 14px auto 0;
+  max-width: 44ch;
+  color: #7a4b17;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(245, 202, 143, 0.28);
+  border: 1px solid rgba(209, 122, 31, 0.32);
+}
+
 @keyframes beeOrbit {
   from {
     transform: rotate(0deg);

@@ -131,6 +131,8 @@ export const messages = {
   fr: {
     common: {
       loading: "Chargement...",
+      longLoadingHint:
+        "Le serveur démarre peut-être après une période d'inactivité. Merci de patienter, la connexion arrive.",
       close: "Fermer",
       cancel: "Annuler",
       save: "Enregistrer",
@@ -247,12 +249,12 @@ export const messages = {
       contact: "Contact",
     },
     demo: {
-      badge: "Version démo",
+      badge: "Tester sans compte",
       info: "Explorez librement la Ruche. Vos modifications ne seront pas sauvegardées.",
       cta: "Créer un compte",
-      landingTitle: "Essayer la démo",
-      landingDescription: "Découvrez la Ruche en version démo — glissez des cartes sur le tableau, sans avoir besoin d'un compte.",
-      exportScope: "Le téléchargement démo inclut uniquement le recto/verso du tableau (sans commentaires ni notes).",
+      landingTitle: "Tester sans compte",
+      landingDescription: "Découvrez la Ruche en version démo — glissez des cartes sur le plateau, sans avoir besoin d'un compte.",
+      exportScope: "Le téléchargement démo inclut uniquement le recto/verso du plateau (sans commentaires ni notes).",
     },
     login: {
       title: "Connexion",
@@ -741,6 +743,8 @@ export const messages = {
   en: {
     common: {
       loading: "Loading...",
+      longLoadingHint:
+        "The server may be waking up after inactivity. Thanks for your patience, you will be connected shortly.",
       close: "Close",
       cancel: "Cancel",
       save: "Save",
@@ -1323,6 +1327,8 @@ export const messages = {
   nl: {
     common: {
       loading: "Laden...",
+      longLoadingHint:
+        "De server wordt mogelijk opnieuw opgestart na inactiviteit. Bedankt voor je geduld, je wordt zo verbonden.",
       close: "Sluiten",
       cancel: "Annuleren",
       save: "Opslaan",

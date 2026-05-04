@@ -6,11 +6,13 @@ const DASH_INTERVAL_MS = 120;
 const DASH_LIFETIME_MS = 1100;
 const MAX_TRAIL_DASHES = 10;
 const TRAIL_OFFSET_DEG = 16;
+const LONG_WAIT_NOTICE_MS = 30_000;
 
 export default function PageLoader({ title, subtitle }) {
   const { t } = useLanguage();
   const [beeAngle, setBeeAngle] = useState(0);
   const [trail, setTrail] = useState([]);
+  const [showLongWaitNotice, setShowLongWaitNotice] = useState(false);
   const animationStartRef = useRef(0);
   const lastDashRef = useRef(0);
   const dashIdRef = useRef(0);
@@ -49,6 +51,16 @@ export default function PageLoader({ title, subtitle }) {
     return () => cancelAnimationFrame(rafId);
   }, []);
 
+  useEffect(() => {
+    const longWaitTimer = window.setTimeout(() => {
+      setShowLongWaitNotice(true);
+    }, LONG_WAIT_NOTICE_MS);
+
+    return () => {
+      window.clearTimeout(longWaitTimer);
+    };
+  }, []);
+
   const handleDashEnd = (id) => {
     setTrail((prev) => prev.filter((dash) => dash.id !== id));
   };
@@ -78,6 +90,9 @@ export default function PageLoader({ title, subtitle }) {
       </div>
       <p className="page-loader__title">{resolvedTitle}</p>
       <p className="page-loader__subtitle">{resolvedSubtitle}</p>
+      {showLongWaitNotice ? (
+        <p className="page-loader__slow-note">{t("common.longLoadingHint")}</p>
+      ) : null}
     </div>
   );
 }
