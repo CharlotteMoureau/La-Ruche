@@ -52,6 +52,8 @@ const cardNoteSchema = z.object({
 
 const COLLABORATOR_ROLES = ["ADMIN", "EDITOR", "COMMENT", "READ", "EDIT"];
 const collaboratorRoleSchema = z.enum(COLLABORATOR_ROLES);
+const FREE_CARD_TITLE_MAX_LENGTH = 30;
+const FREE_CARD_CATEGORIES = new Set(["free", "free-space"]);
 const PRESENCE_TTL_MS = 30_000;
 const COMMENT_PAGE_LIMIT_DEFAULT = 30;
 const COMMENT_PAGE_LIMIT_MAX = 100;
@@ -176,6 +178,29 @@ function sanitizePreviewImage(value) {
   }
 
   return trimmed;
+}
+
+function findTooLongFreeCardTitle(boardData) {
+  const sections = [boardData?.boardCards, boardData?.userCards];
+
+  for (const cards of sections) {
+    if (!Array.isArray(cards)) continue;
+
+    for (const card of cards) {
+      if (!card || typeof card !== "object") continue;
+
+      const category =
+        typeof card.category === "string" ? card.category.trim().toLowerCase() : "";
+      if (!FREE_CARD_CATEGORIES.has(category)) continue;
+
+      const title = typeof card.title === "string" ? card.title : "";
+      if (title.length > FREE_CARD_TITLE_MAX_LENGTH) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 function updateBoardCard(boardData, cardId, updater) {
@@ -590,6 +615,13 @@ hivesRouter.post("/", async (req, res) => {
     return res.status(validation.status).json(validation.body);
   }
 
+  if (findTooLongFreeCardTitle(parsed.data.boardData)) {
+    return res.status(400).json({
+      error: "A free card title must be 30 characters or fewer",
+      code: "HIVE_FREE_CARD_TITLE_TOO_LONG",
+    });
+  }
+
   const isDcoUser = req.user.roleLabel === "Délégué au Contrat d'Objectifs";
   const requestedKind = normalizeHiveKind(parsed.data.kind);
   const isTryingToDcoHive = requestedKind === HIVE_KINDS.DCO;
@@ -818,6 +850,13 @@ hivesRouter.put("/:id", async (req, res) => {
   if (!parsed.success) {
     const validation = getHiveInputValidationResponse(parsed.error);
     return res.status(validation.status).json(validation.body);
+  }
+
+  if (findTooLongFreeCardTitle(parsed.data.boardData)) {
+    return res.status(400).json({
+      error: "A free card title must be 30 characters or fewer",
+      code: "HIVE_FREE_CARD_TITLE_TOO_LONG",
+    });
   }
 
   const hive = await getHiveOr404(req.params.id, {

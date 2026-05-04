@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
+function shouldEnableBackScroll(definition) {
+  return typeof definition === "string" && definition.trim().length > 140;
+}
+
 function getCardIconSources(cardId) {
   const id = String(cardId ?? "").trim();
   if (!id) {
@@ -27,6 +31,7 @@ export default function HexCard({ card, position, onlyFront }) {
   const touchScrollStateRef = useRef(null);
   const [needsScroll, setNeedsScroll] = useState(false);
   const [iconSourceIndex, setIconSourceIndex] = useState(0);
+  const hasLongDefinition = shouldEnableBackScroll(card?.definition);
 
   const style = position
     ? { position: "absolute", left: position.x, top: position.y }
@@ -40,6 +45,7 @@ export default function HexCard({ card, position, onlyFront }) {
 
     const checkOverflow = () => {
       setNeedsScroll(
+        hasLongDefinition ||
         contentElement.scrollHeight > contentElement.clientHeight + 1,
       );
     };
@@ -62,7 +68,7 @@ export default function HexCard({ card, position, onlyFront }) {
       }
       window.removeEventListener("resize", checkOverflow);
     };
-  }, [card, card?.definition, onlyFront]);
+  }, [card, card?.definition, hasLongDefinition, onlyFront]);
 
   useEffect(() => {
     setIconSourceIndex(0);

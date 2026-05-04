@@ -172,6 +172,8 @@ export const messages = {
       HIVE_INVALID_DATA: "Données de ruche invalides.",
       HIVE_TITLE_TOO_LONG:
         "Le titre de la ruche doit contenir au maximum 100 caracteres.",
+      HIVE_FREE_CARD_TITLE_TOO_LONG:
+        "Le titre d'une carte libre doit contenir au maximum 30 caracteres.",
       HIVE_EDIT_FORBIDDEN:
         "Vous n'avez pas l'autorisation de modifier cette ruche.",
       HIVE_RENAME_FORBIDDEN:
@@ -626,7 +628,7 @@ export const messages = {
     },
     addCardModal: {
       title: "À vous de jouer !",
-      placeholder: "Entrez votre texte (max. 50 caractères)",
+      placeholder: "Entrez votre texte (max. 30 caractères)",
       emptyError: "Veuillez entrer un texte pour la carte.",
       validate: "Valider",
       close: "Fermer",
@@ -779,6 +781,8 @@ export const messages = {
       HIVE_ACCESS_DENIED: "Access denied.",
       HIVE_INVALID_DATA: "Invalid hive data.",
       HIVE_TITLE_TOO_LONG: "Hive title must be 100 characters or fewer.",
+      HIVE_FREE_CARD_TITLE_TOO_LONG:
+        "A free card title must be 30 characters or fewer.",
       HIVE_EDIT_FORBIDDEN: "You are not allowed to edit this hive.",
       HIVE_RENAME_FORBIDDEN: "You are not allowed to rename this hive.",
       HIVE_VERSION_INVALID: "Invalid hive version.",
@@ -1210,7 +1214,7 @@ export const messages = {
     },
     addCardModal: {
       title: "Your turn!",
-      placeholder: "Enter your text (max. 50 characters)",
+      placeholder: "Enter your text (max. 30 characters)",
       emptyError: "Please enter text for the card.",
       validate: "Validate",
       close: "Close",
@@ -1360,6 +1364,8 @@ export const messages = {
       HIVE_INVALID_DATA: "Ongeldige bijenkorfgegevens.",
       HIVE_TITLE_TOO_LONG:
         "De titel van de bijenkorf mag maximaal 100 tekens bevatten.",
+      HIVE_FREE_CARD_TITLE_TOO_LONG:
+        "De titel van een vrije kaart mag maximaal 30 tekens bevatten.",
       HIVE_EDIT_FORBIDDEN: "Je mag deze bijenkorf niet bewerken.",
       HIVE_RENAME_FORBIDDEN: "Je mag deze bijenkorf niet hernoemen.",
       HIVE_VERSION_INVALID: "Ongeldige bijenkorfversie.",
@@ -1803,7 +1809,7 @@ export const messages = {
     },
     addCardModal: {
       title: "Jij bent aan zet!",
-      placeholder: "Vul je tekst in (max. 50 tekens)",
+      placeholder: "Vul je tekst in (max. 30 tekens)",
       emptyError: "Vul tekst in voor de kaart.",
       validate: "Bevestigen",
       close: "Sluiten",

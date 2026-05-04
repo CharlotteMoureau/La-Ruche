@@ -1,7 +1,10 @@
 import { FREE_CARD_ICON_PATH } from "../lib/freeCardIcon";
 
+const FREE_CARD_TITLE_MAX_LENGTH = 30;
+
 export default function FreeHexCard({ card }) {
 	const text = card.title || "";
+	const hasLongTitle = text.trim().length >= FREE_CARD_TITLE_MAX_LENGTH;
 
 	const svg = (
 		<svg
@@ -53,11 +56,13 @@ export default function FreeHexCard({ card }) {
 				width="100"
 				height="100"
 				clipPath={`url(#${clipId})`}
-				style={{ pointerEvents: "none" }}
+				style={{ pointerEvents: hasLongTitle ? "auto" : "none" }}
 			>
 				<div className="free-hex-inner">
-					<div className="free-hex-front">
-						<h4>{text}</h4>
+					<div className={`free-hex-front${hasLongTitle ? " free-hex-front--scroll" : ""}`}>
+						<div className={`free-hex-title${hasLongTitle ? " free-hex-title--scroll" : ""}`}>
+							<h4>{text}</h4>
+						</div>
 						{svg}
 					</div>
 				</div>

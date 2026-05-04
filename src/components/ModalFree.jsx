@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../context/LanguageContext";
 
+const FREE_CARD_TITLE_MAX_LENGTH = 30;
+
 const CARD_COLORS = [
   { id: "lime", hex: "#8BB31D", labelKey: "addCardModal.colorCategories.lime" },
   { id: "pink", hex: "#E73458", labelKey: "addCardModal.colorCategories.pink" },
@@ -79,7 +81,7 @@ export default function AddCardModal({
 
   const handleChange = (e) => {
     const value = e.target.value;
-    if (value.length <= 50) {
+    if (value.length <= FREE_CARD_TITLE_MAX_LENGTH) {
       setInputText(value);
       if (value.trim()) {
         setErrorMessage("");
@@ -105,13 +107,15 @@ export default function AddCardModal({
           value={inputText}
           onChange={handleChange}
           placeholder={t("addCardModal.placeholder")}
-          maxLength={50}
+          maxLength={FREE_CARD_TITLE_MAX_LENGTH}
           aria-invalid={errorMessage ? "true" : "false"}
         />
 
         {errorMessage ? <p className="modal-error">{errorMessage}</p> : null}
 
-        <p className="char-count">{inputText.length} / 50</p>
+        <p className="char-count">
+          {inputText.length} / {FREE_CARD_TITLE_MAX_LENGTH}
+        </p>
 
         <p className="color-picker-label">{t("addCardModal.colorLabel")}</p>
         <div className="color-picker">
