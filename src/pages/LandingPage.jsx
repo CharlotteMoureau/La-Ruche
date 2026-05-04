@@ -4,8 +4,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightToBracket,
   faUserPlus,
+  faUser,
+  faPlus,
   faFlaskVial,
   faGraduationCap,
+  faShieldHalved,
+  faScrewdriverWrench,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 import { useAuth } from "../context/AuthContext";
@@ -72,61 +76,63 @@ export default function LandingPage() {
   return (
     <>
       <section className="page-shell landing-shell">
-        <div
-          className={`landing-hero${isAuthenticated ? "" : " landing-hero--with-image"
-            }`}
-        >
+        <div className="landing-hero landing-hero--with-image">
           <div className="landing-hero-copy">
             <h2>{t("landing.title")}</h2>
             <p>
               {isAuthenticated ? t("landing.connected") : t("landing.guest")}
             </p>
           </div>
-          {isAuthenticated ? null : (
-            <img
-              className="landing-image"
-              src="/landing/banner.jpg"
-              alt="landing"
-            />
-          )}
+          <img
+            className="landing-image"
+            src="/landing/banner.jpg"
+            alt="landing"
+          />
         </div>
         <div className="cta-grid landing-cta-grid">
           {isAuthenticated ? (
             <>
-              <Link to="/profile" className="cta-card">
-                <div className="cta-card-image">
-                  <img src="/landing/Profile.jpg" alt="Profile" />
+              <Link to="/profile" className="cta-card cta-card-auth">
+                <div className="cta-card-content cta-card-auth-content">
+                  <div className="card-title-icon">
+                    <FontAwesomeIcon icon={faUser} />
+                    <h3>{t("landing.goProfile")}</h3>
+                  </div>
+                  <p>{t("landing.connected")}</p>
                 </div>
-                <div className="cta-card-content">{t("landing.goProfile")}</div>
               </Link>
               <div
                 onClick={handleCreateHiveClick}
                 role="button"
                 tabIndex={0}
-                className="cta-card cta-card-interactive"
+                className="cta-card cta-card-auth cta-card-interactive"
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     handleCreateHiveClick();
                   }
                 }}
               >
-                <div className="cta-card-image">
-                  <img src="/landing/Hive.jpg" alt="Create Hive" />
-                </div>
-                <div className="cta-card-content">
-                  {t("landing.createHive")}
+                <div className="cta-card-content cta-card-auth-content">
+                  <div className="card-title-icon">
+                    <FontAwesomeIcon icon={faPlus} />
+                    <h3>{t("landing.createHive")}</h3>
+                  </div>
+                  <p>{t("landing.connected")}</p>
                 </div>
               </div>
               <a
                 href="https://www.peca.be/ressources/boite-a-outils/la-ruche"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="cta-card"
+                className="cta-card cta-card-auth"
               >
-                <div className="cta-card-image">
-                  <img src="/landing/Learn%20more.jpg" alt="Learn More" />
+                <div className="cta-card-content cta-card-auth-content">
+                  <div className="card-title-icon">
+                    <FontAwesomeIcon icon={faCircleQuestion} />
+                    <h3>{t("landing.learnMore")}</h3>
+                  </div>
+                  <p>{t("landing.learnMoreText")}</p>
                 </div>
-                <div className="cta-card-content">{t("landing.learnMore")}</div>
               </a>
             </>
           ) : (
@@ -209,11 +215,17 @@ export default function LandingPage() {
       <section className="page-shell">
         <section className="landing-footer-info">
           <Link to="/gdpr" className="landing-info-card landing-gdpr">
-            <h4>{t("landing.gdpr")}</h4>
+            <div className="card-title-icon">
+              <FontAwesomeIcon icon={faShieldHalved} />
+              <h4>{t("landing.gdpr")}</h4>
+            </div>
             <p>{t("landing.gdprPlaceholder")}</p>
           </Link>
           <Link to="/wip" className="landing-info-card landing-wip">
-            <h4>{t("landing.wip")}</h4>
+            <div className="card-title-icon">
+              <FontAwesomeIcon icon={faScrewdriverWrench} />
+              <h4>{t("landing.wip")}</h4>
+            </div>
             <p>{t("landing.wipPlaceholder")}</p>
           </Link>
         </section>
