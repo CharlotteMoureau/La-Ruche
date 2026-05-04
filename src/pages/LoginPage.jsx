@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import PasswordField from "../components/PasswordField";
+import PageLoader from "../components/PageLoader";
 import { useLanguage } from "../context/LanguageContext";
 import { getApiErrorMessage } from "../lib/api";
 
@@ -28,6 +29,17 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  if (loading) {
+    return (
+      <section className="page-shell">
+        <PageLoader
+          title={t("login.submitting")}
+          subtitle={t("common.loading")}
+        />
+      </section>
+    );
+  }
 
   return (
     <section className="page-shell">
