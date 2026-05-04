@@ -659,6 +659,9 @@ export const messages = {
       section6Title: "6. Cookies",
       section6:
         "La Ruche n'utilise pas de cookies de traçage ou publicitaires. Un jeton d'authentification JWT est stocké localement dans votre navigateur pour maintenir votre session active.",
+      section7Title: "7. Responsabilité des utilisateurs",
+      section7:
+        "Chaque utilisateur demeure seul responsable des contenus qu'il crée, publie ou modifie dans La Ruche, notamment les commentaires, les notes et les noms de ruches. La Ruche ne peut être tenue responsable des contenus inappropriés, illicites ou portant atteinte aux droits de tiers qui seraient publiés par les utilisateurs.",
       contact:
         "Pour toute question relative à la confidentialité, contactez l'équipe PECA via",
       contactLinkLabel: "peca.be",
@@ -1230,6 +1233,9 @@ export const messages = {
       section6Title: "6. Cookies",
       section6:
         "La Ruche does not use tracking or advertising cookies. A JWT authentication token is stored locally in your browser to maintain your active session.",
+      section7Title: "7. User responsibility",
+      section7:
+        "Each user remains solely responsible for the content they create, publish, or modify in La Ruche, including comments, notes, and hive names. La Ruche cannot be held liable for inappropriate or unlawful content, or content that infringes third-party rights, posted by users.",
       contact: "For any privacy-related question, contact the PECA team via",
       contactLinkLabel: "peca.be",
     },
@@ -1811,6 +1817,9 @@ export const messages = {
       section6Title: "6. Cookies",
       section6:
         "La Ruche maakt geen gebruik van tracking- of reclamecookies. Een JWT-authenticatietoken wordt lokaal in uw browser opgeslagen om uw actieve sessie te onderhouden.",
+      section7Title: "7. Verantwoordelijkheid van gebruikers",
+      section7:
+        "Elke gebruiker blijft als enige verantwoordelijk voor de inhoud die hij of zij in La Ruche aanmaakt, publiceert of wijzigt, met inbegrip van opmerkingen, notities en namen van bijkorven. La Ruche kan niet aansprakelijk worden gesteld voor ongepaste of onwettige inhoud, of inhoud die inbreuk maakt op rechten van derden, die door gebruikers wordt geplaatst.",
       contact:
         "Voor vragen over privacy kunt u contact opnemen met het PECA-team via",
       contactLinkLabel: "peca.be",

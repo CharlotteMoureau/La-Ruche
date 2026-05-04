@@ -47,6 +47,11 @@ export default function GdprPage() {
           <h3>{t("gdprPage.section6Title")}</h3>
           <p>{t("gdprPage.section6")}</p>
         </div>
+
+        <div className="gdpr-section">
+          <h3>{t("gdprPage.section7Title")}</h3>
+          <p>{t("gdprPage.section7")}</p>
+        </div>
       </div>
 
       <p className="gdpr-contact">
