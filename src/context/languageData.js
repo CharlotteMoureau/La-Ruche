@@ -674,9 +674,12 @@ export const messages = {
       v1Title: "V1 — Prototype frontend (2025)",
       v1Body:
         "La première version de La Ruche était une application purement frontend (interface client) : aucun compte, aucune sauvegarde serveur. Les utilisateurs construisaient leur plateau de cartes en local dans le navigateur, avec possibilité d’export PNG. Simple, rapide, mais sans persistance ni collaboration.",
-      v2Title: "V2 — Plateforme collaborative (2025–aujourd’hui)",
+      v2Title: "V2 — Plateforme collaborative (2025–mai 2026)",
       v2Body:
         "La V2 introduit un back-end (serveur) complet : comptes utilisateurs, sauvegarde des ruches en base de données, système de collaboration (invitations, rôles, boîte de réception), commentaires et réponses dans chaque ruche, notes de cartes, export PNG de tout le plateau (avant et arrière des cartes, commentaires et messages dans la discussion), support trilingue (FR/EN/NL), panneau d’administration, et détection des conflits de version entre collaborateurs.",
+      v21Title: "V2.1 — Mise à jour (mai 2026-aujourd’hui)",
+      v21Body:
+        "La V2.1 ajoute une version démo, met à jour le tutoriel, apporte quelques ajustements mineurs de design et introduit un export de ruche plus flexible : vous pouvez choisir d’exporter tout le contenu, uniquement le plateau, les commentaires, les notes, etc.",
       upcomingTitle: "À venir",
       feature1Title: "Collaboration en temps réel améliorée",
       feature1:
@@ -1247,9 +1250,12 @@ export const messages = {
       v1Title: "V1 - Frontend prototype (2025)",
       v1Body:
         "The first version of La Ruche was a frontend-only application: no accounts and no server-side persistence. Users built their card board locally in the browser, with PNG export available. Simple and fast, but without persistence or collaboration.",
-      v2Title: "V2 - Collaborative platform (2025-present)",
+      v2Title: "V2 - Collaborative platform (2025-May 2026)",
       v2Body:
         "V2 introduced a complete back-end: user accounts, database persistence for hives, a collaboration system (invitations, roles, inbox), comments and replies in each hive, card notes, PNG export of the full board (front and back of cards, comments, and discussion messages), trilingual support (FR/EN/NL), an administration panel, and version conflict detection between collaborators.",
+      v21Title: "V2.1 - Update (May 2026-present)",
+      v21Body:
+        "V2.1 adds a demo version, updates the tutorial, includes a few minor design changes, and introduces more flexible hive export options: you can choose to export everything, only the board, comments, notes, etc.",
       upcomingTitle: "Coming soon",
       feature1Title: "Improved real-time collaboration",
       feature1:
@@ -1832,9 +1838,12 @@ export const messages = {
       v1Title: "V1 — Frontend-prototype (2025)",
       v1Body:
         "De eerste versie van La Ruche was een puur frontend-applicatie: geen accounts, geen opslag op de server. Gebruikers bouwden hun kaartenplaat lokaal in de browser, met exportmogelijkheid naar PNG. Eenvoudig en snel, maar zonder persistentie of samenwerking.",
-      v2Title: "V2 — Collaboratief platform (2025–heden)",
+      v2Title: "V2 — Collaboratief platform (2025–mei 2026)",
       v2Body:
         "V2 introduceert een volledige back-end: gebruikersaccounts, opslag van bijkorven in een database, een samenwerkingssysteem (uitnodigingen, rollen, inbox), opmerkingen en antwoorden in elke bijenkorf, kaartnotities, PNG-export van het volledige bord (voor- en achterkant van de kaarten, opmerkingen en berichten in de discussie), drietalige ondersteuning (FR/EN/NL), een beheerderspaneel en detectie van versieconflicten tussen medewerkers.",
+      v21Title: "V2.1 — Update (mei 2026-heden)",
+      v21Body:
+        "V2.1 voegt een demoversie toe, werkt de handleiding bij, bevat enkele kleine designaanpassingen en introduceert flexibelere exportopties voor bijkorven: u kunt alles exporteren, alleen het bord, opmerkingen, notities, enz.",
       upcomingTitle: "Binnenkort",
       feature1Title: "Verbeterde realtime samenwerking",
       feature1:

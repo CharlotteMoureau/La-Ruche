@@ -19,6 +19,11 @@ export default function WipPage() {
       bodyKey: "wipPage.v2Body",
       badge: "V2",
     },
+    {
+      titleKey: "wipPage.v21Title",
+      bodyKey: "wipPage.v21Body",
+      badge: "V2.1",
+    },
   ];
 
   const features = [
