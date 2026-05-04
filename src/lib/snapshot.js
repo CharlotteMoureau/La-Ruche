@@ -1291,6 +1291,27 @@ export async function captureBoardFrontAndBack(board, mergeErrorMessage) {
   return mergeFrontAndBackCapture(frontDataUrl, backDataUrl, mergeErrorMessage);
 }
 
+export async function captureBoardFrontAndBackZip(board, options = {}) {
+  const {
+    title = "ruche",
+    frontBoardFileName = "front-board",
+    backBoardFileName = "back-board",
+  } = options;
+
+  const { frontDataUrl, backDataUrl } = await captureBoardImages(board);
+  const frontName = `${sanitizeSnapshotFileName(frontBoardFileName)}.png`;
+  const backName = `${sanitizeSnapshotFileName(backBoardFileName)}.png`;
+  const zipBlob = await createZipFromImages([
+    { name: `01-${frontName}`, dataUrl: frontDataUrl },
+    { name: `02-${backName}`, dataUrl: backDataUrl },
+  ]);
+
+  return {
+    blob: zipBlob,
+    fileName: `${sanitizeSnapshotFileName(title)}-captures.zip`,
+  };
+}
+
 export async function captureBoardPreviewImage(board, options = {}) {
   const captureNode = resolveBoardCaptureNode(board);
   const maxWidth = Number(options.maxWidth) > 0 ? Number(options.maxWidth) : 800;

@@ -164,6 +164,7 @@ export default function RucheWorkspace({
   requireSaveBeforeNote = false,
   requestedNoteCardId = null,
   onRequestedNoteHandled,
+  showCardNotes = true,
   isTabletEditorMode = false,
   tabletUsageBlocked = false,
   activeEditorsLabel = "",
@@ -449,6 +450,7 @@ export default function RucheWorkspace({
   }, []);
 
   useEffect(() => {
+    if (!showCardNotes) return;
     if (!requestedNoteCardId) return;
 
     const requestedCard =
@@ -460,7 +462,12 @@ export default function RucheWorkspace({
     setNoteDraft(existingComment?.message || "");
     setIsEditingCardNote(!existingComment?.message);
     onRequestedNoteHandled?.();
-  }, [boardCards, onRequestedNoteHandled, requestedNoteCardId]);
+  }, [
+    boardCards,
+    onRequestedNoteHandled,
+    requestedNoteCardId,
+    showCardNotes,
+  ]);
 
   useEffect(() => {
     const handleBoardDragState = (event) => {
@@ -764,6 +771,8 @@ export default function RucheWorkspace({
   ]);
 
   const handleOpenCardNote = (card) => {
+    if (!showCardNotes) return;
+
     const existingComment = getCardComment(card);
     setNoteModalCardId(card.id);
     setNoteDraft(existingComment?.message || "");
@@ -923,9 +932,9 @@ export default function RucheWorkspace({
     const defaultPosition = pendingFreeCardAnchor
       ? clampBoardPosition(pendingFreeCardAnchor)
       : {
-          x: 300 + Math.random() * 50,
-          y: 200 + Math.random() * 50,
-        };
+        x: 300 + Math.random() * 50,
+        y: 200 + Math.random() * 50,
+      };
 
     const newCard = {
       id: Date.now() + Math.floor(Math.random() * 1000),
@@ -1017,6 +1026,7 @@ export default function RucheWorkspace({
             onReturnSelectedCards={returnSelectedBoardCards}
             onSelectAll={handleSelectAll}
             onOpenCardNote={handleOpenCardNote}
+            showNoteIndicators={showCardNotes}
             noteLocked={requireSaveBeforeNote}
             canEdit={canEdit}
             isTabletEditorMode={isTabletEditorMode}
@@ -1088,7 +1098,7 @@ export default function RucheWorkspace({
         setSelectedColor={setCardColor}
         userCardsCount={userCards.length}
       />
-      {noteModalCardId && activeNoteCard ? (
+      {showCardNotes && noteModalCardId && activeNoteCard ? (
         <div
           className="modal-overlay"
           onClick={(event) => {

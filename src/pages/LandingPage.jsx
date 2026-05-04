@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRightToBracket,
   faUserPlus,
+  faFlaskVial,
+  faGraduationCap,
 } from "@fortawesome/free-solid-svg-icons";
 import { faCircleQuestion } from "@fortawesome/free-regular-svg-icons";
 import { useAuth } from "../context/AuthContext";
@@ -71,9 +73,8 @@ export default function LandingPage() {
     <>
       <section className="page-shell landing-shell">
         <div
-          className={`landing-hero${
-            isAuthenticated ? "" : " landing-hero--with-image"
-          }`}
+          className={`landing-hero${isAuthenticated ? "" : " landing-hero--with-image"
+            }`}
         >
           <div className="landing-hero-copy">
             <h2>{t("landing.title")}</h2>
@@ -168,16 +169,41 @@ export default function LandingPage() {
                   <p>{t("landing.learnMoreText")}</p>
                 </div>
               </Link>
+
+              <Link to="/demo" className="cta-card cta-card-auth">
+                <div className="cta-card-content cta-card-auth-content">
+                  <div className="card-title-icon">
+                    <FontAwesomeIcon icon={faFlaskVial} />
+                    <h3>{t("demo.landingTitle")}</h3>
+                  </div>
+                  <p>{t("demo.landingDescription")}</p>
+                </div>
+              </Link>
+
+              <Link to="/tutorial" className="cta-card cta-card-auth">
+                <div className="cta-card-content cta-card-auth-content">
+                  <div className="card-title-icon">
+                    <FontAwesomeIcon icon={faGraduationCap} />
+                    <h3>{t("landing.tutorial")}</h3>
+                  </div>
+                  <p>{t("landing.tutorialPlaceholder")}</p>
+                </div>
+              </Link>
             </>
           )}
-        </div>
 
-        <Link to="/tutorial" className="landing-tutorial cta-card">
-          <div className="cta-card-content landing-tutorial-content">
-            <h3>{t("landing.tutorial")}</h3>
-            <p>{t("landing.tutorialPlaceholder")}</p>
-          </div>
-        </Link>
+          {isAuthenticated ? (
+            <Link to="/tutorial" className="cta-card cta-card-auth">
+              <div className="cta-card-content cta-card-auth-content">
+                <div className="card-title-icon">
+                  <FontAwesomeIcon icon={faGraduationCap} />
+                  <h3>{t("landing.tutorial")}</h3>
+                </div>
+                <p>{t("landing.tutorialPlaceholder")}</p>
+              </div>
+            </Link>
+          ) : null}
+        </div>
       </section>
 
       <section className="page-shell">

@@ -1,5 +1,57 @@
 @use "../base/variables" as *;
 
+// ── Demo page topbar ─────────────────────────────────────────────────────────
+
+.demo-topbar {
+  background: rgba($jaune, 0.08);
+  border: 1px solid rgba($jaune, 0.35);
+  border-radius: 12px;
+  padding: 8px 14px;
+  margin-bottom: 12px;
+}
+
+.demo-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: $jaune;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.82rem;
+  border-radius: 999px;
+  letter-spacing: 0.4px;
+  flex-shrink: 0;
+}
+
+.demo-topbar-info {
+  margin: 0;
+  font-size: 0.9rem;
+  color: $gris;
+}
+
+.demo-cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: $turquoise;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+
+  &:hover {
+    background: darken($turquoise, 8%);
+    color: #fff;
+  }
+}
+
+
 .landing-hero {
   display: grid;
   gap: 18px;
@@ -70,7 +122,7 @@
     font-size: 1.5rem;
     color: $bleu-fonce;
   }
-  
+
   h3 {
     margin: 0;
     font-size: 1.15rem;
@@ -79,10 +131,61 @@
   }
 }
 
+.landing-cta-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+
+  .cta-card {
+    flex: 0 1 calc((100% - 32px) / 3);
+    max-width: calc((100% - 32px) / 3);
+  }
+
+  @media (max-width: 1100px) {
+    .cta-card {
+      flex-basis: calc((100% - 16px) / 2);
+      max-width: calc((100% - 16px) / 2);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .cta-card {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+  }
+}
+
 .landing-cta-grid .cta-card {
-  border: 1px solid rgba($gris, 0.25);
-  border-left: 5px solid rgba($orange, 0.65);
-  background: linear-gradient(165deg, rgba($orange, 0.1) 0%, rgba($orange, 0.03) 100%);
+  align-self: stretch;
+  border: 1px solid rgba($orange, 0.28);
+  border-left: 5px solid rgba($orange, 0.9);
+  background: linear-gradient(165deg, rgba($orange, 0.14) 0%, rgba($orange, 0.05) 100%);
+
+  &:nth-child(5n + 2) {
+    border-color: rgba($rose, 0.28);
+    border-left-color: rgba($rose, 0.9);
+    background: linear-gradient(165deg, rgba($rose, 0.14) 0%, rgba($rose, 0.05) 100%);
+  }
+
+  &:nth-child(5n + 3) {
+    border-color: rgba($turquoise, 0.28);
+    border-left-color: rgba($turquoise, 0.9);
+    background: linear-gradient(165deg, rgba($turquoise, 0.14) 0%, rgba($turquoise, 0.05) 100%);
+  }
+
+  &:nth-child(5n + 4) {
+    border-color: rgba($vert, 0.28);
+    border-left-color: rgba($vert, 0.9);
+    background: linear-gradient(165deg, rgba($vert, 0.14) 0%, rgba($vert, 0.05) 100%);
+  }
+
+  &:nth-child(5n + 5) {
+    border-color: rgba($mauve, 0.28);
+    border-left-color: rgba($mauve, 0.9);
+    background: linear-gradient(165deg, rgba($mauve, 0.14) 0%, rgba($mauve, 0.05) 100%);
+  }
 
   &:hover {
     border-color: rgba($bleu-fonce, 0.28);
@@ -98,24 +201,8 @@
   }
 }
 
-.landing-tutorial.cta-card:hover {
-  border-color: rgba($turquoise, 0.28);
-  background: linear-gradient(165deg, rgba($turquoise, 0.94) 0%, rgba($turquoise, 0.78) 100%);
-  color: #fff;
-
-  .landing-tutorial-content,
-  .landing-tutorial-content h3,
-  .landing-tutorial-content p {
-    color: #fff;
-  }
-}
-
-.landing-tutorial.cta-card {
-  background: linear-gradient(165deg, rgba($rose, 0.1) 0%, rgba($rose, 0.03) 100%);
-  
-  p {
-    font-weight: 400;
-  }
+.landing-cta-grid .cta-card .cta-card-content {
+  height: 100%;
 }
 
 .cta-card-auth {
@@ -123,7 +210,7 @@
     align-items: flex-start;
     text-align: left;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 10px;
     min-height: 110px;
     padding: 24px;

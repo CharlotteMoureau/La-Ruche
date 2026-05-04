@@ -244,6 +244,14 @@ export const messages = {
         "V1, V2, fonctionnalités à venir — découvrez la feuille de route.",
       contact: "Contact",
     },
+    demo: {
+      badge: "Version démo",
+      info: "Explorez librement la Ruche. Vos modifications ne seront pas sauvegardées.",
+      cta: "Créer un compte",
+      landingTitle: "Essayer la démo",
+      landingDescription: "Découvrez la Ruche en version démo — glissez des cartes sur le tableau, sans avoir besoin d'un compte.",
+      exportScope: "Le téléchargement démo inclut uniquement le recto/verso du tableau (sans commentaires ni notes).",
+    },
     login: {
       title: "Connexion",
       identifier: "Nom d'utilisateur ou email",
@@ -824,6 +832,14 @@ export const messages = {
       wipPlaceholder: "V1, V2, upcoming features — discover the roadmap.",
       contact: "Contact",
     },
+    demo: {
+      badge: "Demo version",
+      info: "Freely explore La Ruche. Your changes won't be saved.",
+      cta: "Create an account",
+      landingTitle: "Try the demo",
+      landingDescription: "Discover La Ruche in demo mode — drag cards onto the board, no account needed.",
+      exportScope: "The demo download includes only the board front/back (no comments or notes).",
+    },
     login: {
       title: "Log in",
       identifier: "Username or email",
@@ -1389,6 +1405,14 @@ export const messages = {
       wip: "In Ontwikkeling",
       wipPlaceholder: "V1, V2, komende functies — ontdek de routekaart.",
       contact: "Contact",
+    },
+    demo: {
+      badge: "Demoversie",
+      info: "Verken La Ruche vrij. Je wijzigingen worden niet opgeslagen.",
+      cta: "Account aanmaken",
+      landingTitle: "Demo proberen",
+      landingDescription: "Ontdek La Ruche in demomodus — sleep kaarten op het bord, zonder account.",
+      exportScope: "De demo-download bevat alleen de voor-/achterkant van het bord (geen opmerkingen of notities).",
     },
     login: {
       title: "Aanmelden",

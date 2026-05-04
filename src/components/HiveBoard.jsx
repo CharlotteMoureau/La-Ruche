@@ -40,6 +40,7 @@ export default function HiveBoard({
   onReturnSelectedCards,
   onSelectAll,
   onOpenCardNote,
+  showNoteIndicators = true,
   noteLocked = false,
   canEdit = true,
   isTabletEditorMode = false,
@@ -393,13 +394,13 @@ export default function HiveBoard({
 
         const fallbackOffset = viewportRect
           ? {
-              x: viewportRect.left + viewportRect.width / 2,
-              y: viewportRect.top + viewportRect.height / 2,
-            }
+            x: viewportRect.left + viewportRect.width / 2,
+            y: viewportRect.top + viewportRect.height / 2,
+          }
           : {
-              x: boardRect.left + boardRect.width / 2,
-              y: boardRect.top + boardRect.height / 2,
-            };
+            x: boardRect.left + boardRect.width / 2,
+            y: boardRect.top + boardRect.height / 2,
+          };
         const effectiveOffset =
           isInsideBoard && isInsideViewport ? offset : fallbackOffset;
 
@@ -785,9 +786,9 @@ export default function HiveBoard({
             </button>
           ) : null}
           {isTabletEditorMode &&
-          selectedCount === 0 &&
-          canEdit &&
-          cards.length > 0 ? (
+            selectedCount === 0 &&
+            canEdit &&
+            cards.length > 0 ? (
             <span className="hive-board__tablet-select-hint">
               {t("workspace.tabletSelectHint")}
             </span>
@@ -895,44 +896,46 @@ export default function HiveBoard({
                     />
                   );
                 })}
-                <div className="hive-board__note-layer">
-                  {cards.map((card) => {
-                    const hasNote = Boolean(card?.comment?.message?.trim());
+                {showNoteIndicators ? (
+                  <div className="hive-board__note-layer">
+                    {cards.map((card) => {
+                      const hasNote = Boolean(card?.comment?.message?.trim());
 
-                    return (
-                      <button
-                        key={`${card.id}-note-indicator`}
-                        type="button"
-                        className={`card-note-indicator ${hasNote ? "has-note" : ""} ${noteLocked ? "is-locked" : ""}`.trim()}
-                        style={{
-                          left: card.position.x + BOARD_NOTE_OFFSET.x,
-                          top: card.position.y + BOARD_NOTE_OFFSET.y,
-                        }}
-                        aria-label={t("workspace.cardNoteTitle")}
-                        aria-disabled={noteLocked}
-                        onMouseDown={(event) => {
-                          event.preventDefault();
-                          event.stopPropagation();
-                        }}
-                        onTouchStart={(event) => {
-                          event.stopPropagation();
-                        }}
-                        onClick={(event) => handleNoteOpen(event, card)}
-                      >
-                        <svg
-                          viewBox="0 0 24 24"
-                          aria-hidden="true"
-                          focusable="false"
+                      return (
+                        <button
+                          key={`${card.id}-note-indicator`}
+                          type="button"
+                          className={`card-note-indicator ${hasNote ? "has-note" : ""} ${noteLocked ? "is-locked" : ""}`.trim()}
+                          style={{
+                            left: card.position.x + BOARD_NOTE_OFFSET.x,
+                            top: card.position.y + BOARD_NOTE_OFFSET.y,
+                          }}
+                          aria-label={t("workspace.cardNoteTitle")}
+                          aria-disabled={noteLocked}
+                          onMouseDown={(event) => {
+                            event.preventDefault();
+                            event.stopPropagation();
+                          }}
+                          onTouchStart={(event) => {
+                            event.stopPropagation();
+                          }}
+                          onClick={(event) => handleNoteOpen(event, card)}
                         >
-                          <path
-                            d="M4 4h16v11H8l-4 4V4zm2 2v8.17L7.17 13H18V6H6z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </button>
-                    );
-                  })}
-                </div>
+                          <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                            focusable="false"
+                          >
+                            <path
+                              d="M4 4h16v11H8l-4 4V4zm2 2v8.17L7.17 13H18V6H6z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </button>
+                      );
+                    })}
+                  </div>
+                ) : null}
               </div>
             </div>
           </div>

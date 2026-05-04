@@ -16,6 +16,7 @@ import GdprPage from "./pages/GdprPage";
 import BugReportPage from "./pages/BugReportPage";
 import WipPage from "./pages/WipPage";
 import TutorialPage from "./pages/TutorialPage";
+import DemoHivePage from "./pages/DemoHivePage";
 import { LanguageProvider } from "./context/LanguageContext";
 import Footer from "./components/Footer";
 import { useAuth } from "./context/AuthContext";
@@ -126,6 +127,7 @@ export default function App() {
           <Route path="/report-bug" element={<BugReportPage />} />
           <Route path="/wip" element={<WipPage />} />
           <Route path="/tutorial" element={<TutorialPage />} />
+          <Route path="/demo" element={<DemoHivePage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Footer />
