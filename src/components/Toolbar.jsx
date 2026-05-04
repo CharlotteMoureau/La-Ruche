@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowsRotate,
+  faChevronDown,
   faDownload,
   faComments,
   faUserPlus,
@@ -13,6 +14,13 @@ import {
   captureHiveExportBundle,
   triggerDownload,
 } from "../lib/snapshot";
+
+const DEFAULT_EXPORT_SELECTIONS = Object.freeze({
+  includeFrontBoard: true,
+  includeBackBoard: true,
+  includeCardNotes: true,
+  includeChat: true,
+});
 
 export default function Toolbar({
   onReset,
@@ -49,9 +57,15 @@ export default function Toolbar({
   const [manageLoadingId, setManageLoadingId] = useState(null);
   const [leaveLoading, setLeaveLoading] = useState(false);
   const [exportLoading, setExportLoading] = useState(false);
+  const [showExportMenu, setShowExportMenu] = useState(false);
+  const [exportSelections, setExportSelections] = useState({
+    ...DEFAULT_EXPORT_SELECTIONS,
+  });
+  const [exportWarning, setExportWarning] = useState("");
   const [showLeaveConfirmModal, setShowLeaveConfirmModal] = useState(false);
   const [exportErrorMessage, setExportErrorMessage] = useState("");
   const lastHandledExportSignalRef = useRef(0);
+  const exportMenuRef = useRef(null);
 
   const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   const getRoleLabel = (role) => {
@@ -96,6 +110,15 @@ export default function Toolbar({
   }, [inviteSuccess]);
 
   useEffect(() => {
+    if (!exportWarning) return undefined;
+    const timeoutId = window.setTimeout(() => {
+      setExportWarning("");
+    }, 3500);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [exportWarning]);
+
+  useEffect(() => {
     if (!openCollaboratorsSignal) return;
     setShowInviteModal(true);
   }, [openCollaboratorsSignal]);
@@ -107,6 +130,30 @@ export default function Toolbar({
       setInviteWarning(t("toolbar.invitesLoadFailed"));
     });
   }, [onLoadSentInvitations, showInviteModal, t]);
+
+  useEffect(() => {
+    if (!showExportMenu) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (!exportMenuRef.current?.contains(event.target)) {
+        setShowExportMenu(false);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setShowExportMenu(false);
+      }
+    };
+
+    window.addEventListener("mousedown", handlePointerDown);
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("mousedown", handlePointerDown);
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [showExportMenu]);
 
   const getInvitationStatusLabel = (status) => {
     switch (status) {
@@ -121,20 +168,40 @@ export default function Toolbar({
     }
   };
 
-  const handleExport = useCallback(async () => {
+  const handleExport = useCallback(async (selectionOverrides) => {
     if (exportLoading) return;
 
     const board = document.querySelector(".hive-board");
     if (!board) return;
 
+    const selectedItems = {
+      ...DEFAULT_EXPORT_SELECTIONS,
+      ...exportSelections,
+      ...selectionOverrides,
+    };
+
+    if (
+      exportOptions &&
+      !selectedItems.includeFrontBoard &&
+      !selectedItems.includeBackBoard &&
+      !selectedItems.includeCardNotes &&
+      !selectedItems.includeChat
+    ) {
+      setExportWarning(t("toolbar.exportSelectAtLeastOne"));
+      return;
+    }
+
     try {
       setExportLoading(true);
+      setExportWarning("");
       if (exportOptions) {
         const { blob, fileName } = await captureHiveExportBundle({
           board,
           ...exportOptions,
+          ...selectedItems,
         });
         triggerDownload(blob, fileName);
+        setShowExportMenu(false);
         return;
       }
 
@@ -153,15 +220,22 @@ export default function Toolbar({
     } finally {
       setExportLoading(false);
     }
-  }, [exportLoading, exportOptions, t]);
+  }, [exportLoading, exportOptions, exportSelections, t]);
 
   useEffect(() => {
     if (!exportSignal) return;
     if (lastHandledExportSignalRef.current === exportSignal) return;
 
     lastHandledExportSignalRef.current = exportSignal;
-    handleExport();
+    handleExport(DEFAULT_EXPORT_SELECTIONS);
   }, [exportSignal, handleExport]);
+
+  const toggleExportSelection = (key) => {
+    setExportSelections((current) => ({
+      ...current,
+      [key]: !current[key],
+    }));
+  };
 
   const handleInvite = async () => {
     const email = inviteEmail.trim().toLowerCase();
@@ -271,10 +345,82 @@ export default function Toolbar({
           </button>
         ) : null}
         {showExportButton ? (
-          <button onClick={handleExport} disabled={exportLoading}>
-            <FontAwesomeIcon icon={faDownload} />
-            {exportLoading ? t("toolbar.exporting") : t("toolbar.export")}
-          </button>
+          <div className="toolbar-export" ref={exportMenuRef}>
+            <button
+              type="button"
+              className={`toolbar-export-btn ${showExportMenu ? "is-open" : ""}`.trim()}
+              onClick={() => {
+                if (!exportOptions) {
+                  handleExport();
+                  return;
+                }
+
+                setExportWarning("");
+                setShowExportMenu((current) => !current);
+              }}
+              disabled={exportLoading}
+              aria-expanded={showExportMenu}
+              aria-haspopup={exportOptions ? "dialog" : undefined}
+            >
+              <FontAwesomeIcon icon={faDownload} />
+              {exportLoading ? t("toolbar.exporting") : t("toolbar.export")}
+              {exportOptions ? <FontAwesomeIcon icon={faChevronDown} /> : null}
+            </button>
+
+            {showExportMenu && exportOptions ? (
+              <div className="toolbar-export-menu">
+                <p className="toolbar-export-menu__title">
+                  {t("toolbar.exportMenuTitle")}
+                </p>
+                <label className="toolbar-export-option">
+                  <input
+                    type="checkbox"
+                    checked={exportSelections.includeFrontBoard}
+                    onChange={() => toggleExportSelection("includeFrontBoard")}
+                  />
+                  <span>{t("toolbar.exportOptionFrontBoard")}</span>
+                </label>
+                <label className="toolbar-export-option">
+                  <input
+                    type="checkbox"
+                    checked={exportSelections.includeBackBoard}
+                    onChange={() => toggleExportSelection("includeBackBoard")}
+                  />
+                  <span>{t("toolbar.exportOptionBackBoard")}</span>
+                </label>
+                <label className="toolbar-export-option">
+                  <input
+                    type="checkbox"
+                    checked={exportSelections.includeCardNotes}
+                    onChange={() => toggleExportSelection("includeCardNotes")}
+                  />
+                  <span>{t("toolbar.exportOptionCardNotes")}</span>
+                </label>
+                <label className="toolbar-export-option">
+                  <input
+                    type="checkbox"
+                    checked={exportSelections.includeChat}
+                    onChange={() => toggleExportSelection("includeChat")}
+                  />
+                  <span>{t("toolbar.exportOptionChat")}</span>
+                </label>
+                {exportWarning ? (
+                  <p className="form-error toolbar-export-menu__warning">
+                    {exportWarning}
+                  </p>
+                ) : null}
+                <button
+                  type="button"
+                  className="toolbar-export-menu__submit"
+                  onClick={() => handleExport()}
+                  disabled={exportLoading}
+                >
+                  <FontAwesomeIcon icon={faDownload} />
+                  {exportLoading ? t("toolbar.exporting") : t("toolbar.export")}
+                </button>
+              </div>
+            ) : null}
+          </div>
         ) : null}
         {shouldShowCollaboratorsButton ? (
           <button

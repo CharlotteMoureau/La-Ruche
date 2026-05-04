@@ -8,6 +8,7 @@ import {
   faPen,
   faXmark,
   faArrowUpRightFromSquare,
+  faChevronDown,
   faDownload,
   faTrash,
   faChevronLeft,
@@ -45,6 +46,12 @@ const BOARD_PADDING = 60;
 const PREVIEW_MAX_BYTES = 45 * 1024;
 const PROFILE_TAB_HIVES = "hives";
 const PROFILE_TAB_SETTINGS = "settings";
+const DEFAULT_EXPORT_SELECTIONS = Object.freeze({
+  includeFrontBoard: true,
+  includeBackBoard: true,
+  includeCardNotes: true,
+  includeChat: true,
+});
 
 function normalizeRoleText(value) {
   return String(value || "")
@@ -321,6 +328,11 @@ export default function ProfilePage() {
   const [duplicatingHiveId, setDuplicatingHiveId] = useState(null);
   const [deletingHiveId, setDeletingHiveId] = useState(null);
   const [downloadingHiveId, setDownloadingHiveId] = useState(null);
+  const [openDownloadMenuHiveId, setOpenDownloadMenuHiveId] = useState(null);
+  const [downloadSelections, setDownloadSelections] = useState({
+    ...DEFAULT_EXPORT_SELECTIONS,
+  });
+  const [downloadWarning, setDownloadWarning] = useState("");
   const [renamingHiveId, setRenamingHiveId] = useState(null);
   const [confirmDeleteHiveId, setConfirmDeleteHiveId] = useState(null);
   const [renameDraft, setRenameDraft] = useState({
@@ -338,6 +350,41 @@ export default function ProfilePage() {
     sourceTitle: "",
     nextTitle: "",
   });
+  const downloadMenuRef = useRef(null);
+
+  useEffect(() => {
+    if (!downloadWarning) return undefined;
+
+    const timeoutId = window.setTimeout(() => {
+      setDownloadWarning("");
+    }, 3500);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [downloadWarning]);
+
+  useEffect(() => {
+    if (!openDownloadMenuHiveId) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (!downloadMenuRef.current?.contains(event.target)) {
+        setOpenDownloadMenuHiveId(null);
+      }
+    };
+
+    const handleEscape = (event) => {
+      if (event.key === "Escape") {
+        setOpenDownloadMenuHiveId(null);
+      }
+    };
+
+    window.addEventListener("mousedown", handlePointerDown);
+    window.addEventListener("keydown", handleEscape);
+
+    return () => {
+      window.removeEventListener("mousedown", handlePointerDown);
+      window.removeEventListener("keydown", handleEscape);
+    };
+  }, [openDownloadMenuHiveId]);
   const [roleForm, setRoleForm] = useState({ role: "", roleOtherText: "" });
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: "",
@@ -915,10 +962,27 @@ export default function ProfilePage() {
     setCreatingHive(true);
   };
 
-  const downloadHiveSnapshot = async (hiveId, fallbackTitle) => {
+  const downloadHiveSnapshot = async (hiveId, fallbackTitle, selectionOverrides) => {
     if (!hiveId || downloadingHiveId) return;
 
+    const selectedItems = {
+      ...DEFAULT_EXPORT_SELECTIONS,
+      ...downloadSelections,
+      ...selectionOverrides,
+    };
+
+    if (
+      !selectedItems.includeFrontBoard &&
+      !selectedItems.includeBackBoard &&
+      !selectedItems.includeCardNotes &&
+      !selectedItems.includeChat
+    ) {
+      setDownloadWarning(t("toolbar.exportSelectAtLeastOne"));
+      return;
+    }
+
     setError("");
+    setDownloadWarning("");
     setDownloadingHiveId(hiveId);
 
     const stage = document.createElement("div");
@@ -951,6 +1015,7 @@ export default function ProfilePage() {
         title: hiveData.title || fallbackTitle,
         comments: hiveData.comments || [],
         boardCards: localizedBoardCards,
+        ...selectedItems,
         frontBoardFileName: t("toolbar.frontBoardExportName"),
         backBoardFileName: t("toolbar.backBoardExportName"),
         chatFileName: t("toolbar.chatExportName"),
@@ -975,6 +1040,7 @@ export default function ProfilePage() {
       });
 
       triggerDownload(blob, fileName);
+      setOpenDownloadMenuHiveId(null);
     } catch (err) {
       setError(
         t("profile.downloadFailed", {
@@ -986,6 +1052,13 @@ export default function ProfilePage() {
       stage.remove();
       setDownloadingHiveId(null);
     }
+  };
+
+  const toggleDownloadSelection = (key) => {
+    setDownloadSelections((current) => ({
+      ...current,
+      [key]: !current[key],
+    }));
   };
 
   const confirmCreateHive = () => {
@@ -1124,9 +1197,8 @@ export default function ProfilePage() {
               id="profile-tab-hives"
               type="button"
               role="tab"
-              className={`profile-tab ${
-                activeProfileTab === PROFILE_TAB_HIVES ? "is-active" : ""
-              }`}
+              className={`profile-tab ${activeProfileTab === PROFILE_TAB_HIVES ? "is-active" : ""
+                }`}
               aria-selected={activeProfileTab === PROFILE_TAB_HIVES}
               aria-controls="profile-panel-hives"
               onClick={() => setActiveProfileTab(PROFILE_TAB_HIVES)}
@@ -1138,9 +1210,8 @@ export default function ProfilePage() {
               id="profile-tab-settings"
               type="button"
               role="tab"
-              className={`profile-tab ${
-                activeProfileTab === PROFILE_TAB_SETTINGS ? "is-active" : ""
-              }`}
+              className={`profile-tab ${activeProfileTab === PROFILE_TAB_SETTINGS ? "is-active" : ""
+                }`}
               aria-selected={activeProfileTab === PROFILE_TAB_SETTINGS}
               aria-controls="profile-panel-settings"
               onClick={() => setActiveProfileTab(PROFILE_TAB_SETTINGS)}
@@ -1309,7 +1380,7 @@ export default function ProfilePage() {
                                   : ""}
                               </strong>
                               {!hive.isSharedHive ||
-                              hive.collaboratorRole === "ADMIN" ? (
+                                hive.collaboratorRole === "ADMIN" ? (
                                 <button
                                   type="button"
                                   className="hive-rename-trigger"
@@ -1362,21 +1433,114 @@ export default function ProfilePage() {
                                   : t("profile.duplicate")}
                               </button>
                             ) : null}
-                            <button
-                              type="button"
-                              className="button-link button-link-download"
-                              onClick={() =>
-                                downloadHiveSnapshot(hive.id, hive.title)
+                            <div
+                              className="profile-download"
+                              ref={
+                                openDownloadMenuHiveId === hive.id
+                                  ? downloadMenuRef
+                                  : null
                               }
-                              disabled={downloadingHiveId === hive.id}
                             >
-                              <FontAwesomeIcon icon={faDownload} />
-                              {downloadingHiveId === hive.id
-                                ? t("profile.downloading")
-                                : t("profile.download")}
-                            </button>
+                              <button
+                                type="button"
+                                className={`button-link button-link-download profile-download__trigger ${openDownloadMenuHiveId === hive.id ? "is-open" : ""}`.trim()}
+                                onClick={() => {
+                                  setDownloadWarning("");
+                                  setOpenDownloadMenuHiveId((current) =>
+                                    current === hive.id ? null : hive.id,
+                                  );
+                                }}
+                                disabled={Boolean(downloadingHiveId)}
+                                aria-expanded={openDownloadMenuHiveId === hive.id}
+                                aria-haspopup="dialog"
+                              >
+                                <FontAwesomeIcon icon={faDownload} />
+                                {downloadingHiveId === hive.id
+                                  ? t("profile.downloading")
+                                  : t("profile.download")}
+                                <FontAwesomeIcon icon={faChevronDown} />
+                              </button>
+
+                              {openDownloadMenuHiveId === hive.id ? (
+                                <div className="profile-download__menu">
+                                  <p className="profile-download__title">
+                                    {t("toolbar.exportMenuTitle")}
+                                  </p>
+                                  <label className="profile-download__option">
+                                    <input
+                                      type="checkbox"
+                                      checked={downloadSelections.includeFrontBoard}
+                                      onChange={() =>
+                                        toggleDownloadSelection(
+                                          "includeFrontBoard",
+                                        )
+                                      }
+                                    />
+                                    <span>
+                                      {t("toolbar.exportOptionFrontBoard")}
+                                    </span>
+                                  </label>
+                                  <label className="profile-download__option">
+                                    <input
+                                      type="checkbox"
+                                      checked={downloadSelections.includeBackBoard}
+                                      onChange={() =>
+                                        toggleDownloadSelection(
+                                          "includeBackBoard",
+                                        )
+                                      }
+                                    />
+                                    <span>
+                                      {t("toolbar.exportOptionBackBoard")}
+                                    </span>
+                                  </label>
+                                  <label className="profile-download__option">
+                                    <input
+                                      type="checkbox"
+                                      checked={downloadSelections.includeCardNotes}
+                                      onChange={() =>
+                                        toggleDownloadSelection(
+                                          "includeCardNotes",
+                                        )
+                                      }
+                                    />
+                                    <span>
+                                      {t("toolbar.exportOptionCardNotes")}
+                                    </span>
+                                  </label>
+                                  <label className="profile-download__option">
+                                    <input
+                                      type="checkbox"
+                                      checked={downloadSelections.includeChat}
+                                      onChange={() =>
+                                        toggleDownloadSelection("includeChat")
+                                      }
+                                    />
+                                    <span>{t("toolbar.exportOptionChat")}</span>
+                                  </label>
+                                  {downloadWarning ? (
+                                    <p className="form-error profile-download__warning">
+                                      {downloadWarning}
+                                    </p>
+                                  ) : null}
+                                  <button
+                                    type="button"
+                                    className="button-link button-link-download profile-download__submit"
+                                    onClick={() =>
+                                      downloadHiveSnapshot(hive.id, hive.title)
+                                    }
+                                    disabled={Boolean(downloadingHiveId)}
+                                  >
+                                    <FontAwesomeIcon icon={faDownload} />
+                                    {downloadingHiveId === hive.id
+                                      ? t("profile.downloading")
+                                      : t("profile.download")}
+                                  </button>
+                                </div>
+                              ) : null}
+                            </div>
                             {!hive.isSharedHive ||
-                            hive.collaboratorRole === "ADMIN" ? (
+                              hive.collaboratorRole === "ADMIN" ? (
                               <button
                                 type="button"
                                 className="button-link button-link-delete"

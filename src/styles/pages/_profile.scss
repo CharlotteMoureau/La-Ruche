@@ -322,6 +322,65 @@
     padding: 9px 14px;
   }
 
+  .profile-download {
+    position: relative;
+  }
+
+  .profile-download__trigger {
+    svg:last-child {
+      font-size: 0.8rem;
+    }
+
+    &.is-open {
+      filter: brightness(0.95);
+    }
+  }
+
+  .profile-download__menu {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    width: min(280px, calc(100vw - 48px));
+    padding: 14px;
+    border: 1px solid #ddd2c7;
+    border-radius: 16px;
+    background: #fffaf2;
+    box-shadow: 0 18px 40px rgba(67, 47, 24, 0.18);
+    z-index: 20;
+  }
+
+  .profile-download__title {
+    margin: 0 0 0.7rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #3f2c18;
+  }
+
+  .profile-download__option {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.35rem 0;
+    color: #2f2921;
+    cursor: pointer;
+
+    input {
+      width: 1rem;
+      height: 1rem;
+      margin: 0;
+      accent-color: $bleu-fonce;
+    }
+  }
+
+  .profile-download__warning {
+    margin: 0.5rem 0 0;
+  }
+
+  .profile-download__submit {
+    width: 100%;
+    margin-top: 0.8rem;
+  }
+
   .form-success {
     margin: 0 0 10px;
     color: #1f6a46;

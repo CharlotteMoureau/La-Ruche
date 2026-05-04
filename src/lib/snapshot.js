@@ -1429,6 +1429,10 @@ export async function captureHiveExportBundle({
   title,
   comments = [],
   boardCards = [],
+  includeFrontBoard = true,
+  includeBackBoard = true,
+  includeChat = true,
+  includeCardNotes = true,
   frontBoardFileName,
   backBoardFileName,
   chatFileName,
@@ -1452,38 +1456,54 @@ export async function captureHiveExportBundle({
   await waitForAllNodeImages(captureNode);
   await waitForNextPaint();
 
+  if (!includeFrontBoard && !includeBackBoard && !includeChat && !includeCardNotes) {
+    throw new Error("No export items selected");
+  }
+
   const cardsWithNotes = getCardsWithNotes(boardCards);
-  const { frontDataUrl, backDataUrl } = await captureBoardImages(board);
-  const chatCommentChunks = splitCommentsForExport(comments, CHAT_EXPORT_CHUNK_SIZE);
-  const chatDataUrls = await Promise.all(
-    chatCommentChunks.map((commentChunk) =>
-      captureDetachedNode(
-        createChatExportNode({
-          comments: commentChunk,
-          chatTitle,
-          noCommentsMessage,
-          formatDateTime,
-          unknownUserLabel,
-        }),
+  const boardImagesPromise = includeFrontBoard || includeBackBoard
+    ? captureBoardImages(board)
+    : Promise.resolve(null);
+  const chatDataUrlsPromise = includeChat
+    ? Promise.all(
+      splitCommentsForExport(comments, CHAT_EXPORT_CHUNK_SIZE).map((commentChunk) =>
+        captureDetachedNode(
+          createChatExportNode({
+            comments: commentChunk,
+            chatTitle,
+            noCommentsMessage,
+            formatDateTime,
+            unknownUserLabel,
+          }),
+        ),
       ),
-    ),
-  );
-  const cardNotesChunks = chunkItems(cardsWithNotes, CHAT_EXPORT_CHUNK_SIZE);
-  const cardCommentsDataUrls = await Promise.all(
-    cardNotesChunks.map((cardsChunk) =>
-      captureDetachedNode(
-        createCardNotesExportNode({
-          boardCards: cardsChunk,
-          cardNotesTitle,
-          noCardNotesMessage,
-          cardLabel,
-          unknownUserLabel,
-          formatCreatedByText,
-          formatUpdatedByText,
-        }),
+    )
+    : Promise.resolve([]);
+  const cardCommentsDataUrlsPromise = includeCardNotes
+    ? Promise.all(
+      chunkItems(cardsWithNotes, CHAT_EXPORT_CHUNK_SIZE).map((cardsChunk) =>
+        captureDetachedNode(
+          createCardNotesExportNode({
+            boardCards: cardsChunk,
+            cardNotesTitle,
+            noCardNotesMessage,
+            cardLabel,
+            unknownUserLabel,
+            formatCreatedByText,
+            formatUpdatedByText,
+          }),
+        ),
       ),
-    ),
-  );
+    )
+    : Promise.resolve([]);
+
+  const [boardImages, chatDataUrls, cardCommentsDataUrls] = await Promise.all([
+    boardImagesPromise,
+    chatDataUrlsPromise,
+    cardCommentsDataUrlsPromise,
+  ]);
+  const frontDataUrl = boardImages?.frontDataUrl;
+  const backDataUrl = boardImages?.backDataUrl;
 
   const resolvedFrontBoardFileName =
     sanitizeSnapshotFileName(frontBoardFileName || "front-board") + ".png";
@@ -1505,8 +1525,12 @@ export async function captureHiveExportBundle({
       : [`${resolvedCardNotesBaseFileName}.png`];
 
   const zipFiles = [
-    { name: resolvedFrontBoardFileName, dataUrl: frontDataUrl },
-    { name: resolvedBackBoardFileName, dataUrl: backDataUrl },
+    ...(includeFrontBoard && frontDataUrl
+      ? [{ name: resolvedFrontBoardFileName, dataUrl: frontDataUrl }]
+      : []),
+    ...(includeBackBoard && backDataUrl
+      ? [{ name: resolvedBackBoardFileName, dataUrl: backDataUrl }]
+      : []),
     ...chatDataUrls.map((dataUrl, index) => ({
       name: resolvedChatFileNames[index],
       dataUrl,

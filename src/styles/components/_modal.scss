@@ -518,6 +518,73 @@
   line-height: 1;
 }
 
+.toolbar-export {
+  position: relative;
+}
+
+.toolbar-export-btn {
+  svg:last-child {
+    font-size: 0.8rem;
+  }
+
+  &.is-open {
+    filter: brightness(0.95);
+  }
+}
+
+.toolbar-export-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 240px;
+  padding: 14px;
+  border: 1px solid #ddd2c7;
+  border-radius: 16px;
+  background: #fffaf2;
+  box-shadow: 0 18px 40px rgba(67, 47, 24, 0.18);
+  z-index: 30;
+}
+
+.toolbar-export-menu__title {
+  margin: 0 0 0.7rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #3f2c18;
+}
+
+.toolbar-export-option {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.35rem 0;
+  color: #2f2921;
+  cursor: pointer;
+
+  input {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: $bleu-fonce;
+  }
+}
+
+.toolbar-export-menu__warning {
+  margin: 0.5rem 0 0;
+}
+
+.toolbar-export-menu__submit {
+  width: 100%;
+  margin-top: 0.8rem;
+}
+
+@media (max-width: 767px) {
+  .toolbar-export-menu {
+    left: 0;
+    right: auto;
+    width: min(280px, calc(100vw - 32px));
+  }
+}
+
 .toolbar-invite-modal {
   text-align: left;
   max-width: 620px;
