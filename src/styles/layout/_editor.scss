@@ -33,6 +33,9 @@ body.editor-route #root {
 
 .editor-topbar {
   display: flex;
+  position: relative;
+  z-index: 1605;
+  isolation: isolate;
   align-items: center;
   justify-content: space-between;
   gap: 12px 20px;
@@ -40,7 +43,7 @@ body.editor-route #root {
   flex-wrap: wrap;
   flex-shrink: 0;
 
-  > .editor-topbar-main > label > input {
+  >.editor-topbar-main>label>input {
     margin-left: 8px;
     border: 1px solid #ccc;
     border-radius: 8px;
