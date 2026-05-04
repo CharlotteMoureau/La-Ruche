@@ -572,7 +572,7 @@ export const messages = {
       exportOptionFrontBoard: "Recto du plateau",
       exportOptionBackBoard: "Verso du plateau",
       exportOptionCardNotes: "Notes des cartes",
-      exportOptionChat: "Chat",
+      exportOptionChat: "Commentaires",
       exportSelectAtLeastOne: "Sélectionnez au moins un élément à exporter.",
       roleAdmin: "Administrateur",
       roleEdit: "Éditeur",
