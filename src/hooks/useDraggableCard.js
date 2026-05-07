@@ -235,12 +235,8 @@ export function useDraggableCard({
 
   const startDrag = useCallback(
     (clientX, clientY, options = {}) => {
-      const {
-        toggleSelectionOnRelease = false,
-      } = options;
-      const shouldDragSelection =
-        isSelected &&
-        selectedCards.length > 1;
+      const { toggleSelectionOnRelease = false } = options;
+      const shouldDragSelection = isSelected && selectedCards.length > 1;
       const dragCards = shouldDragSelection ? selectedCards : [card];
 
       if (selectedCards.length && !isSelected && !toggleSelectionOnRelease) {
@@ -264,12 +260,7 @@ export function useDraggableCard({
       setIsDragging(false);
       setIsDraggingOverLibrary(false);
     },
-    [
-      card,
-      isSelected,
-      onClearSelection,
-      selectedCards,
-    ],
+    [card, isSelected, onClearSelection, selectedCards],
   );
 
   const handleMouseDown = useCallback(
@@ -382,20 +373,41 @@ export function useDraggableCard({
     [finalizeDrag],
   );
 
+  const handleTouchCancel = useCallback(
+    (event) => {
+      event.stopPropagation();
+      if (!dragStateRef.current) return;
+
+      const touch = event.changedTouches?.[0];
+
+      setIsDragging(false);
+      finalizeDrag(touch ? { x: touch.clientX, y: touch.clientY } : undefined);
+    },
+    [finalizeDrag],
+  );
+
   useEffect(() => {
     const options = { passive: false };
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("touchmove", handleTouchMove, options);
     document.addEventListener("touchend", handleTouchEnd);
+    document.addEventListener("touchcancel", handleTouchCancel);
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("touchmove", handleTouchMove, options);
       document.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("touchcancel", handleTouchCancel);
     };
-  }, [handleMouseMove, handleMouseUp, handleTouchMove, handleTouchEnd]);
+  }, [
+    handleMouseMove,
+    handleMouseUp,
+    handleTouchMove,
+    handleTouchEnd,
+    handleTouchCancel,
+  ]);
 
   useEffect(() => {
     if (!dragStateRef.current) return;
