@@ -74,6 +74,12 @@
         h4 {
           padding-bottom: 5px;
           font-size: 0.57rem;
+          max-width: 100%;
+          margin: 0;
+          line-height: 1.2;
+          overflow-wrap: anywhere;
+          word-break: break-word;
+          hyphens: auto;
         }
 
         img {
@@ -264,6 +270,14 @@
       border-radius: 999px;
       border: 2px solid rgba(255, 255, 255, 0.72);
     }
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1200px) and (orientation: landscape) and (pointer: coarse) {
+  .hex-card .hex.reco-enseignant .hex-inner .hex-front,
+  .hex-card .hex.reco-equipe .hex-inner .hex-front {
+    padding-left: 16px;
+    padding-right: 16px;
   }
 }
 
