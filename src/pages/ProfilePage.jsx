@@ -263,46 +263,58 @@ function getCaptureBoardSize(boardCards) {
 function ProfileCaptureBoard({ boardData }) {
   const boardCards = getBoardCards(boardData);
   const boardSize = getCaptureBoardSize(boardCards);
+  const boardSurfaceStyle = {
+    position: "relative",
+    width: `${boardSize.width}px`,
+    height: `${boardSize.height}px`,
+    "--board-card-size": `${CARD_SIZE}px`,
+  };
 
   return (
-    <main
-      className="hive-board profile-capture-board"
-      style={{
-        position: "relative",
-        width: `${boardSize.width}px`,
-        height: `${boardSize.height}px`,
-      }}
-    >
-      {boardCards.map((card) => {
-        const position = {
-          x: Number(card?.position?.x) || 0,
-          y: Number(card?.position?.y) || 0,
-        };
-
-        return (
+    <main className="hive-board profile-capture-board" style={boardSurfaceStyle}>
+      <div className="hive-board__canvas-shell" style={boardSurfaceStyle}>
+        <div className="hive-board__canvas" style={boardSurfaceStyle}>
           <div
-            key={
-              card?.id ||
-              `${card?.category || "card"}-${position.x}-${position.y}`
-            }
-            className="draggable-card"
+            className="hive-board__canvas-content"
             style={{
-              position: "absolute",
-              left: position.x,
-              top: position.y,
-              zIndex: 1000,
-              width: `${CARD_SIZE}px`,
-              height: `${CARD_SIZE}px`,
+              width: `${boardSize.width}px`,
+              height: `${boardSize.height}px`,
+              transform: "none",
             }}
           >
-            {card?.category === "free" ? (
-              <FreeHexCard card={card} />
-            ) : (
-              <HexCard card={card} />
-            )}
+            {boardCards.map((card) => {
+              const position = {
+                x: Number(card?.position?.x) || 0,
+                y: Number(card?.position?.y) || 0,
+              };
+
+              return (
+                <div
+                  key={
+                    card?.id ||
+                    `${card?.category || "card"}-${position.x}-${position.y}`
+                  }
+                  className="draggable-card"
+                  style={{
+                    position: "absolute",
+                    left: position.x,
+                    top: position.y,
+                    zIndex: Number(card?.zIndex) || 1000,
+                    width: `${CARD_SIZE}px`,
+                    height: `${CARD_SIZE}px`,
+                  }}
+                >
+                  {card?.category === "free" ? (
+                    <FreeHexCard card={card} />
+                  ) : (
+                    <HexCard card={card} />
+                  )}
+                </div>
+              );
+            })}
           </div>
-        );
-      })}
+        </div>
+      </div>
     </main>
   );
 }

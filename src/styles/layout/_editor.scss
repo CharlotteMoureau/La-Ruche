@@ -1,8 +1,9 @@
 .profile-capture-stage {
   position: fixed;
-  left: -10000px;
+  left: 0;
   top: 0;
   pointer-events: none;
+  opacity: 0;
 }
 
 .profile-capture-board {

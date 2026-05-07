@@ -1586,7 +1586,6 @@ export default function RucheEditorPage() {
           openCollaboratorsSignal={openCollaboratorsSignal}
           exportSignal={exportSignal}
           exportOptions={exportOptions}
-          hidden
         />
       ) : null}
 

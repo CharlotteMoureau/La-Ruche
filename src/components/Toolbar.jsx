@@ -227,8 +227,15 @@ export default function Toolbar({
     if (lastHandledExportSignalRef.current === exportSignal) return;
 
     lastHandledExportSignalRef.current = exportSignal;
+
+    if (exportOptions) {
+      setExportWarning("");
+      setShowExportMenu(true);
+      return;
+    }
+
     handleExport(DEFAULT_EXPORT_SELECTIONS);
-  }, [exportSignal, handleExport]);
+  }, [exportOptions, exportSignal, handleExport]);
 
   const toggleExportSelection = (key) => {
     setExportSelections((current) => ({

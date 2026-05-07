@@ -4,9 +4,10 @@ import { createFreeCardIconDataUrl, getFreeCardColor } from "./freeCardIcon";
 
 const EXPORT_STAGE_STYLE = {
   position: "fixed",
-  left: "-10000px",
+  left: "0",
   top: "0",
   pointerEvents: "none",
+  opacity: "0",
   zIndex: "-1",
 };
 
@@ -16,8 +17,7 @@ const EXPORT_SURFACE_STYLE = {
   padding: "40px",
   background: "#f5efe2",
   color: "#2f2921",
-  fontFamily:
-    '"Segoe UI", "Helvetica Neue", Arial, sans-serif',
+  fontFamily: '"Segoe UI", "Helvetica Neue", Arial, sans-serif',
 };
 
 const EXPORT_PANEL_STYLE = {
@@ -79,7 +79,11 @@ function createElement(tagName, options = {}) {
   return element;
 }
 
-function getBoundedExportScale(width, height, preferredScale = DEFAULT_EXPORT_SCALE) {
+function getBoundedExportScale(
+  width,
+  height,
+  preferredScale = DEFAULT_EXPORT_SCALE,
+) {
   if (width <= 0 || height <= 0) {
     return 1;
   }
@@ -150,8 +154,14 @@ function getCommentEntryCount(comment) {
   return 1 + (comment?.replies?.length || 0);
 }
 
-function splitCommentsForExport(comments, maxEntriesPerChunk = CHAT_EXPORT_CHUNK_SIZE) {
-  const safeLimit = Number(maxEntriesPerChunk) > 0 ? Number(maxEntriesPerChunk) : CHAT_EXPORT_CHUNK_SIZE;
+function splitCommentsForExport(
+  comments,
+  maxEntriesPerChunk = CHAT_EXPORT_CHUNK_SIZE,
+) {
+  const safeLimit =
+    Number(maxEntriesPerChunk) > 0
+      ? Number(maxEntriesPerChunk)
+      : CHAT_EXPORT_CHUNK_SIZE;
   const chunks = [];
   let currentChunk = [];
   let currentEntryCount = 0;
@@ -170,7 +180,10 @@ function splitCommentsForExport(comments, maxEntriesPerChunk = CHAT_EXPORT_CHUNK
       let replyStart = 0;
       while (replyStart < replies.length) {
         const maxRepliesInChunk = Math.max(1, safeLimit - 1);
-        const replySlice = replies.slice(replyStart, replyStart + maxRepliesInChunk);
+        const replySlice = replies.slice(
+          replyStart,
+          replyStart + maxRepliesInChunk,
+        );
 
         chunks.push([
           {
@@ -185,7 +198,10 @@ function splitCommentsForExport(comments, maxEntriesPerChunk = CHAT_EXPORT_CHUNK
       return;
     }
 
-    if (currentEntryCount > 0 && currentEntryCount + threadEntryCount > safeLimit) {
+    if (
+      currentEntryCount > 0 &&
+      currentEntryCount + threadEntryCount > safeLimit
+    ) {
       chunks.push(currentChunk);
       currentChunk = [];
       currentEntryCount = 0;
@@ -203,7 +219,10 @@ function splitCommentsForExport(comments, maxEntriesPerChunk = CHAT_EXPORT_CHUNK
 }
 
 function chunkItems(items, maxItemsPerChunk = CHAT_EXPORT_CHUNK_SIZE) {
-  const safeLimit = Number(maxItemsPerChunk) > 0 ? Number(maxItemsPerChunk) : CHAT_EXPORT_CHUNK_SIZE;
+  const safeLimit =
+    Number(maxItemsPerChunk) > 0
+      ? Number(maxItemsPerChunk)
+      : CHAT_EXPORT_CHUNK_SIZE;
   const chunks = [];
 
   for (let index = 0; index < items.length; index += safeLimit) {
@@ -283,12 +302,7 @@ function createCardNotesTitle({ card, cardLabel }) {
   return heading;
 }
 
-function createCommentItem({
-  author,
-  dateText,
-  message,
-  isReply = false,
-}) {
+function createCommentItem({ author, dateText, message, isReply = false }) {
   const item = createElement("div", {
     styles: {
       ...EXPORT_COMMENT_STYLE,
@@ -554,7 +568,9 @@ function resolveBoardCaptureNode(board) {
 }
 
 function normalizePreviewCardsFromBoardData(boardData) {
-  const cards = Array.isArray(boardData?.boardCards) ? boardData.boardCards : [];
+  const cards = Array.isArray(boardData?.boardCards)
+    ? boardData.boardCards
+    : [];
 
   return cards
     .filter((card) => card && typeof card === "object")
@@ -590,9 +606,10 @@ function getPreviewCategoryFill(category) {
 }
 
 function getPreviewCategoryStroke(cardOrCategory) {
-  const category = typeof cardOrCategory === "string"
-    ? cardOrCategory
-    : cardOrCategory?.category;
+  const category =
+    typeof cardOrCategory === "string"
+      ? cardOrCategory
+      : cardOrCategory?.category;
 
   if (category === "recommandations-enseignant") {
     return "#EF7D00";
@@ -610,9 +627,10 @@ function getPreviewCategoryStroke(cardOrCategory) {
 }
 
 function getPreviewCategoryTextColor(cardOrCategory) {
-  const category = typeof cardOrCategory === "string"
-    ? cardOrCategory
-    : cardOrCategory?.category;
+  const category =
+    typeof cardOrCategory === "string"
+      ? cardOrCategory
+      : cardOrCategory?.category;
 
   if (category === "recommandations-enseignant") {
     return "#EF7D00";
@@ -630,9 +648,10 @@ function getPreviewCategoryTextColor(cardOrCategory) {
 }
 
 function hasDashedCardBorder(cardOrCategory) {
-  const category = typeof cardOrCategory === "string"
-    ? cardOrCategory
-    : cardOrCategory?.category;
+  const category =
+    typeof cardOrCategory === "string"
+      ? cardOrCategory
+      : cardOrCategory?.category;
 
   return (
     category === "recommandations-enseignant" ||
@@ -651,8 +670,19 @@ function getCardNotesBorderStyle(card) {
   return `${borderStyle} 3px ${borderColor}`;
 }
 
-function drawWrappedCenteredText(context, text, centerX, startY, maxWidth, lineHeight, maxLines) {
-  const words = String(text || "").trim().split(/\s+/).filter(Boolean);
+function drawWrappedCenteredText(
+  context,
+  text,
+  centerX,
+  startY,
+  maxWidth,
+  lineHeight,
+  maxLines,
+) {
+  const words = String(text || "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
   if (!words.length) {
     return;
   }
@@ -676,9 +706,10 @@ function drawWrappedCenteredText(context, text, centerX, startY, maxWidth, lineH
   }
 
   lines.slice(0, maxLines).forEach((entry, index) => {
-    const text = index === maxLines - 1 && lines.length > maxLines
-      ? `${entry.replace(/\s+\S+$/, "")}...`
-      : entry;
+    const text =
+      index === maxLines - 1 && lines.length > maxLines
+        ? `${entry.replace(/\s+\S+$/, "")}...`
+        : entry;
     context.fillText(text, centerX, startY + index * lineHeight);
   });
 }
@@ -693,14 +724,16 @@ function getCardIconCandidates(card) {
     return [];
   }
 
-  const candidates = [`/icons/${id}.png`, `/icons/${encodeURIComponent(id)}.png`];
+  const candidates = [
+    `/icons/${id}.png`,
+    `/icons/${encodeURIComponent(id)}.png`,
+  ];
   if (id.endsWith(".")) {
     candidates.push(`/icons/${id.slice(0, -1)}.png`);
   }
 
   return [...new Set(candidates)];
 }
-
 
 function drawHexPath(context, x, y, size) {
   const radius = size / 2;
@@ -752,7 +785,10 @@ async function loadImageFromCandidates(candidates) {
   return null;
 }
 
-export async function renderBoardPreviewFromData(boardData, { maxWidth, maxHeight }) {
+export async function renderBoardPreviewFromData(
+  boardData,
+  { maxWidth, maxHeight },
+) {
   const cards = normalizePreviewCardsFromBoardData(boardData);
   if (!cards.length) {
     return null;
@@ -768,16 +804,22 @@ export async function renderBoardPreviewFromData(boardData, { maxWidth, maxHeigh
   );
   const rightBound = Math.min(
     PREVIEW_BOARD_WIDTH,
-    Math.max(...cards.map((card) => card.x + PREVIEW_CARD_SIZE)) + BOARD_CAPTURE_PADDING,
+    Math.max(...cards.map((card) => card.x + PREVIEW_CARD_SIZE)) +
+      BOARD_CAPTURE_PADDING,
   );
   const bottomBound = Math.min(
     PREVIEW_BOARD_HEIGHT,
-    Math.max(...cards.map((card) => card.y + PREVIEW_CARD_SIZE)) + BOARD_CAPTURE_PADDING,
+    Math.max(...cards.map((card) => card.y + PREVIEW_CARD_SIZE)) +
+      BOARD_CAPTURE_PADDING,
   );
 
   const regionWidth = Math.max(1, rightBound - leftBound);
   const regionHeight = Math.max(1, bottomBound - topBound);
-  const fitScale = Math.min(maxWidth / regionWidth, maxHeight / regionHeight, 1);
+  const fitScale = Math.min(
+    maxWidth / regionWidth,
+    maxHeight / regionHeight,
+    1,
+  );
   const width = Math.max(1, Math.round(regionWidth * fitScale));
   const height = Math.max(1, Math.round(regionHeight * fitScale));
 
@@ -836,16 +878,27 @@ export async function renderBoardPreviewFromData(boardData, { maxWidth, maxHeigh
     context.textBaseline = "middle";
 
     if (card.category !== "free") {
-      const idFontSize = Math.max(8, Math.round(size * PREVIEW_FRONT_LAYOUT.idFontSize));
+      const idFontSize = Math.max(
+        8,
+        Math.round(size * PREVIEW_FRONT_LAYOUT.idFontSize),
+      );
       context.font = `700 ${idFontSize}px "Poppins", "Segoe UI", sans-serif`;
-      context.fillText(card.id, centerX, y + Math.round(size * PREVIEW_FRONT_LAYOUT.idY));
+      context.fillText(
+        card.id,
+        centerX,
+        y + Math.round(size * PREVIEW_FRONT_LAYOUT.idY),
+      );
     }
 
-    const titleFontSize = Math.max(7, Math.round(size * PREVIEW_FRONT_LAYOUT.titleFontSize));
+    const titleFontSize = Math.max(
+      7,
+      Math.round(size * PREVIEW_FRONT_LAYOUT.titleFontSize),
+    );
     context.font = `600 ${titleFontSize}px "Poppins", "Segoe UI", sans-serif`;
-    const titleY = card.category === "free" 
-      ? y + Math.round(size * 0.30)
-      : y + Math.round(size * PREVIEW_FRONT_LAYOUT.titleStartY);
+    const titleY =
+      card.category === "free"
+        ? y + Math.round(size * 0.3)
+        : y + Math.round(size * PREVIEW_FRONT_LAYOUT.titleStartY);
     drawWrappedCenteredText(
       context,
       card.title,
@@ -858,11 +911,17 @@ export async function renderBoardPreviewFromData(boardData, { maxWidth, maxHeigh
 
     const icon = iconById.get(card.id);
     if (icon) {
-      const iconSize = Math.max(10, Math.round(size * PREVIEW_FRONT_LAYOUT.iconSize));
+      const iconSize = Math.max(
+        10,
+        Math.round(size * PREVIEW_FRONT_LAYOUT.iconSize),
+      );
       const iconX = Math.round(x + size / 2 - iconSize / 2);
-      const iconY = card.category === "free"
-        ? Math.round(y + size * 0.58 - iconSize / 2)
-        : Math.round(y + size * PREVIEW_FRONT_LAYOUT.iconCenterY - iconSize / 2);
+      const iconY =
+        card.category === "free"
+          ? Math.round(y + size * 0.58 - iconSize / 2)
+          : Math.round(
+              y + size * PREVIEW_FRONT_LAYOUT.iconCenterY - iconSize / 2,
+            );
       context.drawImage(icon, iconX, iconY, iconSize, iconSize);
     }
   });
@@ -936,8 +995,14 @@ function getCaptureRegion(node) {
     };
   }
 
-  const left = Math.max(0, Math.floor(contentBounds.left - BOARD_CAPTURE_PADDING));
-  const top = Math.max(0, Math.floor(contentBounds.top - BOARD_CAPTURE_PADDING));
+  const left = Math.max(
+    0,
+    Math.floor(contentBounds.left - BOARD_CAPTURE_PADDING),
+  );
+  const top = Math.max(
+    0,
+    Math.floor(contentBounds.top - BOARD_CAPTURE_PADDING),
+  );
   const right = Math.min(
     nodeWidth,
     Math.ceil(contentBounds.right + BOARD_CAPTURE_PADDING),
@@ -1004,7 +1069,10 @@ function waitForImageLoad(image, timeoutMs = 10000) {
       image.removeEventListener("error", handleDone);
 
       if (typeof image.decode === "function") {
-        image.decode().catch(() => undefined).finally(resolve);
+        image
+          .decode()
+          .catch(() => undefined)
+          .finally(resolve);
         return;
       }
 
@@ -1314,15 +1382,18 @@ export async function captureBoardFrontAndBackZip(board, options = {}) {
 
 export async function captureBoardPreviewImage(board, options = {}) {
   const captureNode = resolveBoardCaptureNode(board);
-  const maxWidth = Number(options.maxWidth) > 0 ? Number(options.maxWidth) : 800;
-  const maxHeight = Number(options.maxHeight) > 0 ? Number(options.maxHeight) : 450;
+  const maxWidth =
+    Number(options.maxWidth) > 0 ? Number(options.maxWidth) : 800;
+  const maxHeight =
+    Number(options.maxHeight) > 0 ? Number(options.maxHeight) : 450;
   const sourceScale = Number.isFinite(Number(options.sourceScale))
     ? Math.min(3, Math.max(1, Number(options.sourceScale)))
     : 2;
   const quality = Number.isFinite(Number(options.quality))
     ? Math.min(1, Math.max(0.1, Number(options.quality)))
     : 0.76;
-  const maxBytes = Number(options.maxBytes) > 0 ? Number(options.maxBytes) : 170 * 1024;
+  const maxBytes =
+    Number(options.maxBytes) > 0 ? Number(options.maxBytes) : 170 * 1024;
   const boardData = options.boardData;
 
   function getDataUrlBytes(dataUrl) {
@@ -1384,7 +1455,11 @@ export async function captureBoardPreviewImage(board, options = {}) {
     });
     const image = await loadImage(sourceDataUrl);
 
-    const fitScale = Math.min(maxWidth / image.width, maxHeight / image.height, 1);
+    const fitScale = Math.min(
+      maxWidth / image.width,
+      maxHeight / image.height,
+      1,
+    );
     const width = Math.max(1, Math.round(image.width * fitScale));
     const height = Math.max(1, Math.round(image.height * fitScale));
 
@@ -1456,45 +1531,52 @@ export async function captureHiveExportBundle({
   await waitForAllNodeImages(captureNode);
   await waitForNextPaint();
 
-  if (!includeFrontBoard && !includeBackBoard && !includeChat && !includeCardNotes) {
+  if (
+    !includeFrontBoard &&
+    !includeBackBoard &&
+    !includeChat &&
+    !includeCardNotes
+  ) {
     throw new Error("No export items selected");
   }
 
   const cardsWithNotes = getCardsWithNotes(boardCards);
-  const boardImagesPromise = includeFrontBoard || includeBackBoard
-    ? captureBoardImages(board)
-    : Promise.resolve(null);
+  const boardImagesPromise =
+    includeFrontBoard || includeBackBoard
+      ? captureBoardImages(board)
+      : Promise.resolve(null);
   const chatDataUrlsPromise = includeChat
     ? Promise.all(
-      splitCommentsForExport(comments, CHAT_EXPORT_CHUNK_SIZE).map((commentChunk) =>
-        captureDetachedNode(
-          createChatExportNode({
-            comments: commentChunk,
-            chatTitle,
-            noCommentsMessage,
-            formatDateTime,
-            unknownUserLabel,
-          }),
+        splitCommentsForExport(comments, CHAT_EXPORT_CHUNK_SIZE).map(
+          (commentChunk) =>
+            captureDetachedNode(
+              createChatExportNode({
+                comments: commentChunk,
+                chatTitle,
+                noCommentsMessage,
+                formatDateTime,
+                unknownUserLabel,
+              }),
+            ),
         ),
-      ),
-    )
+      )
     : Promise.resolve([]);
   const cardCommentsDataUrlsPromise = includeCardNotes
     ? Promise.all(
-      chunkItems(cardsWithNotes, CHAT_EXPORT_CHUNK_SIZE).map((cardsChunk) =>
-        captureDetachedNode(
-          createCardNotesExportNode({
-            boardCards: cardsChunk,
-            cardNotesTitle,
-            noCardNotesMessage,
-            cardLabel,
-            unknownUserLabel,
-            formatCreatedByText,
-            formatUpdatedByText,
-          }),
+        chunkItems(cardsWithNotes, CHAT_EXPORT_CHUNK_SIZE).map((cardsChunk) =>
+          captureDetachedNode(
+            createCardNotesExportNode({
+              boardCards: cardsChunk,
+              cardNotesTitle,
+              noCardNotesMessage,
+              cardLabel,
+              unknownUserLabel,
+              formatCreatedByText,
+              formatUpdatedByText,
+            }),
+          ),
         ),
-      ),
-    )
+      )
     : Promise.resolve([]);
 
   const [boardImages, chatDataUrls, cardCommentsDataUrls] = await Promise.all([
@@ -1509,10 +1591,14 @@ export async function captureHiveExportBundle({
     sanitizeSnapshotFileName(frontBoardFileName || "front-board") + ".png";
   const resolvedBackBoardFileName =
     sanitizeSnapshotFileName(backBoardFileName || "back-board") + ".png";
-  const resolvedChatBaseFileName = sanitizeSnapshotFileName(chatFileName || "hive-chat");
+  const resolvedChatBaseFileName = sanitizeSnapshotFileName(
+    chatFileName || "hive-chat",
+  );
   const resolvedChatFileNames =
     chatDataUrls.length > 1
-      ? chatDataUrls.map((_, index) => `${resolvedChatBaseFileName} (${index + 1}).png`)
+      ? chatDataUrls.map(
+          (_, index) => `${resolvedChatBaseFileName} (${index + 1}).png`,
+        )
       : [`${resolvedChatBaseFileName}.png`];
   const resolvedCardNotesBaseFileName = sanitizeSnapshotFileName(
     cardNotesFileName || "card-notes",
@@ -1520,8 +1606,8 @@ export async function captureHiveExportBundle({
   const resolvedCardNotesFileNames =
     cardCommentsDataUrls.length > 1
       ? cardCommentsDataUrls.map(
-        (_, index) => `${resolvedCardNotesBaseFileName} (${index + 1}).png`,
-      )
+          (_, index) => `${resolvedCardNotesBaseFileName} (${index + 1}).png`,
+        )
       : [`${resolvedCardNotesBaseFileName}.png`];
 
   const zipFiles = [

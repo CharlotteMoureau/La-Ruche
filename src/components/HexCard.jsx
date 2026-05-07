@@ -86,6 +86,7 @@ export default function HexCard({ card, position, onlyFront }) {
   const clipId = `hc-${card.id}`;
   const iconSources = getCardIconSources(card.id);
   const iconSource = iconSources[iconSourceIndex] || iconSources[0] || "";
+  const iconCandidatesJson = JSON.stringify(iconSources);
 
   const handleBackContentTouchStart = (event) => {
     if (!needsScroll || event.touches.length !== 1) return;
@@ -155,6 +156,7 @@ export default function HexCard({ card, position, onlyFront }) {
               <h4>{card.title}</h4>
               <img
                 src={iconSource}
+                data-icon-candidates={iconCandidatesJson}
                 alt={card.title}
                 onError={() => {
                   setIconSourceIndex((current) => {
