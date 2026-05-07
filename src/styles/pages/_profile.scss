@@ -572,14 +572,15 @@
     }
 
     .hive-title-row {
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       align-items: flex-start;
       gap: 10px;
     }
 
     .hive-title-row > strong {
-      flex: 1 1 100%;
-      width: 100%;
+      flex: 1 1 auto;
+      width: auto;
+      min-width: 0;
     }
 
     .inline-actions {
