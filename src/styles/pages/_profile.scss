@@ -564,6 +564,31 @@
   }
 }
 
+@media (min-width: 768px) and (max-width: 1200px) and (orientation: portrait) and (pointer: coarse) {
+  .profile-page {
+    .list-grid li {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .hive-title-row {
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .hive-title-row > strong {
+      flex: 1 1 100%;
+      width: 100%;
+    }
+
+    .inline-actions {
+      width: 100%;
+      margin-top: 0;
+    }
+  }
+}
+
 @media (max-width: 720px) {
   .profile-page {
     .profile-tabs {
