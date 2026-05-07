@@ -1,6 +1,7 @@
 import domtoimage from "dom-to-image-more";
 import JSZip from "jszip";
 import { createFreeCardIconDataUrl, getFreeCardColor } from "./freeCardIcon";
+import cardsCatalog from "../data/cards.json";
 
 const EXPORT_STAGE_STYLE = {
   position: "fixed",
@@ -43,6 +44,33 @@ const CHAT_EXPORT_CHUNK_SIZE = 10;
 const PREVIEW_CARD_SIZE = 200;
 const PREVIEW_BOARD_WIDTH = 2200;
 const PREVIEW_BOARD_HEIGHT = 1600;
+const LIBRARY_CATEGORY_ORDER = Object.freeze([
+  "visees",
+  "conditions-enseignant",
+  "recommandations-enseignant",
+  "conditions-equipe",
+  "recommandations-equipe",
+  "domaine",
+  "free",
+]);
+
+const LIBRARY_CATEGORY_RANK = Object.freeze(
+  LIBRARY_CATEGORY_ORDER.reduce((accumulator, category, index) => {
+    accumulator[category] = index;
+    return accumulator;
+  }, {}),
+);
+
+const LIBRARY_CARD_INDEX_BY_ID = Object.freeze(
+  cardsCatalog.reduce((accumulator, card, index) => {
+    const id = String(card?.id || "").trim();
+    if (id && !(id in accumulator)) {
+      accumulator[id] = index;
+    }
+
+    return accumulator;
+  }, {}),
+);
 
 const PREVIEW_FRONT_LAYOUT = {
   idFontSize: 0.085,
@@ -238,6 +266,38 @@ function getCardsWithNotes(boardCards = []) {
   );
 }
 
+function getCardsWithBackTexts(boardCards = []) {
+  return sortCardsByLibraryOrder(boardCards).filter((card) =>
+    hasMessage(card?.definition),
+  );
+}
+
+function sortCardsByLibraryOrder(cards) {
+  return [...cards].sort((left, right) => {
+    const leftCategoryRank =
+      LIBRARY_CATEGORY_RANK[left?.category] ?? Number.MAX_SAFE_INTEGER;
+    const rightCategoryRank =
+      LIBRARY_CATEGORY_RANK[right?.category] ?? Number.MAX_SAFE_INTEGER;
+
+    if (leftCategoryRank !== rightCategoryRank) {
+      return leftCategoryRank - rightCategoryRank;
+    }
+
+    const leftLibraryIndex =
+      LIBRARY_CARD_INDEX_BY_ID[String(left?.id || "")] ??
+      Number.MAX_SAFE_INTEGER;
+    const rightLibraryIndex =
+      LIBRARY_CARD_INDEX_BY_ID[String(right?.id || "")] ??
+      Number.MAX_SAFE_INTEGER;
+
+    if (leftLibraryIndex !== rightLibraryIndex) {
+      return leftLibraryIndex - rightLibraryIndex;
+    }
+
+    return String(left?.title || "").localeCompare(String(right?.title || ""));
+  });
+}
+
 function sortCardsForExport(cards) {
   return [...cards].sort((left, right) => {
     const leftY = Number(left?.position?.y ?? 0);
@@ -292,6 +352,54 @@ function createCardNotesTitle({ card, cardLabel }) {
       gap: "10px",
     },
   });
+
+  heading.appendChild(
+    createElement("span", {
+      text: `${cardLabel}: ${card.title || "-"}`,
+    }),
+  );
+
+  return heading;
+}
+
+function createBackTextTitle({ card, cardLabel }) {
+  const heading = createElement("h2", {
+    styles: {
+      margin: "0 0 10px",
+      fontSize: "22px",
+      lineHeight: "1.3",
+      color: "#3b2c1d",
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      flexWrap: "wrap",
+    },
+  });
+
+  if (hasMessage(card?.id)) {
+    heading.appendChild(
+      createElement("span", {
+        text: card.id,
+        styles: {
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minWidth: "40px",
+          height: "30px",
+          borderRadius: "999px",
+          padding: "0 10px",
+          fontSize: "14px",
+          fontWeight: "700",
+          color: getPreviewCategoryTextColor(card),
+          background: getPreviewCategoryFill(card.category),
+          border: hasDashedCardBorder(card)
+            ? `2px dashed ${getPreviewCategoryStroke(card)}`
+            : "2px solid transparent",
+          boxSizing: "border-box",
+        },
+      }),
+    );
+  }
 
   heading.appendChild(
     createElement("span", {
@@ -494,6 +602,56 @@ function createCardNotesExportNode({
     );
 
     wrapper.appendChild(meta);
+    panel.appendChild(wrapper);
+  });
+
+  return surface;
+}
+
+function createBackTextsExportNode({
+  boardCards = [],
+  backTextsTitle,
+  noBackTextsMessage,
+  cardLabel,
+}) {
+  const surface = createElement("section", { styles: EXPORT_SURFACE_STYLE });
+  appendSectionHeader(surface, backTextsTitle);
+
+  const panel = createElement("div", { styles: EXPORT_PANEL_STYLE });
+  surface.appendChild(panel);
+
+  const cardsWithBackTexts = getCardsWithBackTexts(boardCards);
+
+  if (!cardsWithBackTexts.length) {
+    panel.appendChild(createEmptyState(noBackTextsMessage));
+    return surface;
+  }
+
+  cardsWithBackTexts.forEach((card, index) => {
+    const wrapper = createElement("article", {
+      styles: {
+        ...EXPORT_COMMENT_STYLE,
+        marginTop: index ? "18px" : "0",
+        background: "#fffdf8",
+        border: getCardNotesBorderStyle(card),
+      },
+    });
+
+    wrapper.appendChild(createBackTextTitle({ card, cardLabel }));
+
+    wrapper.appendChild(
+      createElement("p", {
+        text: String(card.definition || "").trim(),
+        styles: {
+          margin: "0",
+          fontSize: "16px",
+          lineHeight: "1.6",
+          whiteSpace: "pre-wrap",
+          wordBreak: "break-word",
+        },
+      }),
+    );
+
     panel.appendChild(wrapper);
   });
 
@@ -1516,6 +1674,8 @@ export async function captureHiveExportBundle({
   noCommentsMessage,
   cardNotesTitle,
   noCardNotesMessage,
+  backTextsTitle,
+  noBackTextsMessage,
   cardLabel,
   unknownUserLabel,
   formatDateTime,
@@ -1541,10 +1701,10 @@ export async function captureHiveExportBundle({
   }
 
   const cardsWithNotes = getCardsWithNotes(boardCards);
-  const boardImagesPromise =
-    includeFrontBoard || includeBackBoard
-      ? captureBoardImages(board)
-      : Promise.resolve(null);
+  const cardsWithBackTexts = getCardsWithBackTexts(boardCards);
+  const boardImagesPromise = includeFrontBoard
+    ? captureBoardImages(board)
+    : Promise.resolve(null);
   const chatDataUrlsPromise = includeChat
     ? Promise.all(
         splitCommentsForExport(comments, CHAT_EXPORT_CHUNK_SIZE).map(
@@ -1578,19 +1738,42 @@ export async function captureHiveExportBundle({
         ),
       )
     : Promise.resolve([]);
+  const backTextsDataUrlsPromise = includeBackBoard
+    ? Promise.all(
+        chunkItems(cardsWithBackTexts, CHAT_EXPORT_CHUNK_SIZE).map(
+          (cardsChunk) =>
+            captureDetachedNode(
+              createBackTextsExportNode({
+                boardCards: cardsChunk,
+                backTextsTitle: backTextsTitle || backBoardFileName || "Board back texts",
+                noBackTextsMessage: noBackTextsMessage || "No board card has back text.",
+                cardLabel,
+              }),
+            ),
+        ),
+      )
+    : Promise.resolve([]);
 
-  const [boardImages, chatDataUrls, cardCommentsDataUrls] = await Promise.all([
+  const [boardImages, chatDataUrls, cardCommentsDataUrls, backTextsDataUrls] =
+    await Promise.all([
     boardImagesPromise,
     chatDataUrlsPromise,
     cardCommentsDataUrlsPromise,
+    backTextsDataUrlsPromise,
   ]);
   const frontDataUrl = boardImages?.frontDataUrl;
-  const backDataUrl = boardImages?.backDataUrl;
 
   const resolvedFrontBoardFileName =
     sanitizeSnapshotFileName(frontBoardFileName || "front-board") + ".png";
-  const resolvedBackBoardFileName =
-    sanitizeSnapshotFileName(backBoardFileName || "back-board") + ".png";
+  const resolvedBackTextsBaseFileName = sanitizeSnapshotFileName(
+    backBoardFileName || "back-texts",
+  );
+  const resolvedBackTextsFileNames =
+    backTextsDataUrls.length > 1
+      ? backTextsDataUrls.map(
+          (_, index) => `${resolvedBackTextsBaseFileName} (${index + 1}).png`,
+        )
+      : [`${resolvedBackTextsBaseFileName}.png`];
   const resolvedChatBaseFileName = sanitizeSnapshotFileName(
     chatFileName || "hive-chat",
   );
@@ -1614,9 +1797,10 @@ export async function captureHiveExportBundle({
     ...(includeFrontBoard && frontDataUrl
       ? [{ name: resolvedFrontBoardFileName, dataUrl: frontDataUrl }]
       : []),
-    ...(includeBackBoard && backDataUrl
-      ? [{ name: resolvedBackBoardFileName, dataUrl: backDataUrl }]
-      : []),
+    ...backTextsDataUrls.map((dataUrl, index) => ({
+      name: resolvedBackTextsFileNames[index],
+      dataUrl,
+    })),
     ...chatDataUrls.map((dataUrl, index) => ({
       name: resolvedChatFileNames[index],
       dataUrl,

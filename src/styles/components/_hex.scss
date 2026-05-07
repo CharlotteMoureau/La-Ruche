@@ -1,3 +1,4 @@
+@use "sass:color";
 @use "../base/variables" as *;
 
 .hex-card {
@@ -98,51 +99,78 @@
           flex-direction: column;
           justify-content: center;
           align-items: center;
+          gap: 6px;
+          padding: 12px 6px;
           overflow: hidden;
+        }
+
+        .hex-back-preview {
+          width: 100%;
         }
 
         p {
           font-size: 0.45rem;
           line-height: 1.25;
           text-align: center;
-          padding: 15px 0;
+          margin: 0;
+          padding: 0;
           overflow-wrap: anywhere;
           word-break: break-word;
-          hyphens: auto;
+          hyphens: none;
         }
 
-        .scrollable-back {
-          position: relative;
-          justify-content: flex-start;
-          overflow-y: auto;
-          overflow-x: hidden;
-          -webkit-overflow-scrolling: touch;
-          touch-action: pan-y;
-          overscroll-behavior: contain;
-          padding-top: 26%;
-          padding-bottom: 18%;
-          scrollbar-width: thin;
-          scrollbar-color: rgba(0, 0, 0, 0.35) transparent;
+        .hex-back-expand-btn {
+          height: 18px;
+          min-height: 18px;
+          font-size: 0.6rem;
+          border-radius: 999px;
+          border: none;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 4px;
+          padding: 0 6px;
+          width: auto;
+          align-self: center;
+          color: $bleu-fonce;
+          background: rgba(255, 255, 255, 0.65);
+          cursor: pointer;
+          transition: transform 0.2s ease, background-color 0.2s ease;
 
-          &::-webkit-scrollbar {
-            width: 4px;
+          span {
+            font-size: 0.34rem;
+            font-weight: 600;
+            letter-spacing: 0.01em;
+            text-transform: uppercase;
           }
 
-          &::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 2px;
+          &:hover {
+            transform: scale(1.08);
+            background: rgba(255, 255, 255, 0.9);
           }
 
-          &::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 2px;
-            border: 1px solid rgba(255, 255, 255, 0.55);
+          &:focus-visible {
+            outline: 2px solid $bleu-fonce;
+            outline-offset: 2px;
           }
 
-          p.long-def {
-            padding: 0;
+          &.hex-back-expand-btn--reco-enseignant {
+            background: #fde3cc;
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.9);
+            }
+          }
+
+          &.hex-back-expand-btn--reco-equipe {
+            background: #f1dceb;
+
+            &:hover {
+              background: rgba(255, 255, 255, 0.9);
+            }
           }
         }
+
       }
     }
 
@@ -251,29 +279,155 @@
 }
 
 @media (pointer: coarse) {
-  .hex-card .hex-back .scrollable-back {
-    padding-right: 10px;
-    scrollbar-width: auto;
-    scrollbar-color: rgba(17, 24, 39, 0.72) rgba(255, 255, 255, 0.45);
+  .hex-card .hex-back .hex-back-expand-btn {
+    height: 22px;
+    min-height: 22px;
+    font-size: 0.68rem;
+    padding: 0 8px;
 
-    &::-webkit-scrollbar {
-      width: 10px;
+    span {
+      font-size: 0.42rem;
     }
+  }
+}
 
-    &::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.45);
-      border-radius: 999px;
+.hex-definition-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30000;
+  background: radial-gradient(circle at top, rgba(49, 39, 131, 0.3), rgba(0, 0, 0, 0.6));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.hex-definition-modal {
+  position: relative;
+  width: min(90vw, 72vh, 680px);
+}
+
+.hex-definition-modal-close {
+  position: absolute;
+  top: -8px;
+  right: 4px;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 2rem;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 2;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.08);
+  }
+}
+
+.hex-definition-modal-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  clip-path: polygon(50% 0%, 93% 25%, 93% 75%, 50% 100%, 7% 75%, 7% 25%);
+  padding: clamp(2.4rem, 8vw, 4.2rem) clamp(2rem, 8vw, 4.5rem);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 20px 46px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+
+  .hex-definition-modal-outline {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+
+    polygon {
+      fill: none;
+      stroke: transparent;
+      stroke-width: 4;
     }
+  }
 
-    &::-webkit-scrollbar-thumb {
-      background: linear-gradient(180deg, rgba(17, 24, 39, 0.82) 0%, rgba(55, 65, 81, 0.82) 100%);
-      border-radius: 999px;
-      border: 2px solid rgba(255, 255, 255, 0.72);
+  h3 {
+    position: relative;
+    z-index: 1;
+    margin: 0 0 0.9rem;
+    font-size: clamp(1.15rem, 2.9vw, 1.8rem);
+    max-width: 100%;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  p {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-size: clamp(0.95rem, 2vw, 1.18rem);
+    line-height: 1.6;
+    max-height: min(45vh, 320px);
+    overflow-y: auto;
+    padding: 0 2px;
+    width: 100%;
+  }
+
+  &.visees {
+    background: linear-gradient(160deg, color.adjust($turquoise, $lightness: 3%) 0%, color.adjust($turquoise, $lightness: -15%) 100%);
+  }
+
+  &.conditions-enseignant {
+    background: linear-gradient(160deg, color.adjust($orange, $lightness: 4%) 0%, color.adjust($orange, $lightness: -18%) 100%);
+  }
+
+  &.recommandations-enseignant {
+    background: linear-gradient(160deg, #fff 0%, #f8ede2 100%);
+    color: $orange;
+
+    .hex-definition-modal-outline polygon {
+      stroke: $orange;
+      stroke-dasharray: 6 3;
+    }
+  }
+
+  &.conditions-equipe {
+    background: linear-gradient(160deg, color.adjust($mauve, $lightness: 6%) 0%, color.adjust($mauve, $lightness: -18%) 100%);
+  }
+
+  &.recommandations-equipe {
+    background: linear-gradient(160deg, #fff 0%, #f6eaf2 100%);
+    color: $mauve;
+
+    .hex-definition-modal-outline polygon {
+      stroke: $mauve;
+      stroke-dasharray: 6 3;
+    }
+  }
+
+  &.domaine {
+    background: linear-gradient(160deg, color.adjust($rose, $lightness: 6%) 0%, color.adjust($rose, $lightness: -14%) 100%);
+  }
+}
+
+@media (max-width: 640px) {
+  .hex-definition-modal {
+    width: min(94vw, 84vh, 560px);
+  }
+
+  .hex-definition-modal-card {
+    p {
+      max-height: min(50vh, 360px);
     }
   }
 }
 
 @media (min-width: 768px) and (max-width: 1200px) and (orientation: landscape) and (pointer: coarse) {
+
   .hex-card .hex.reco-enseignant .hex-inner .hex-front,
   .hex-card .hex.reco-equipe .hex-inner .hex-front {
     padding-left: 16px;

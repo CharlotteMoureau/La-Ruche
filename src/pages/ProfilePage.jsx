@@ -1036,6 +1036,8 @@ export default function ProfilePage() {
         noCommentsMessage: t("editor.noComments"),
         cardNotesTitle: t("toolbar.cardNotesExportTitle"),
         noCardNotesMessage: t("toolbar.noCardNotesExport"),
+        backTextsTitle: t("toolbar.backTextsExportTitle"),
+        noBackTextsMessage: t("toolbar.noBackTextsExport"),
         cardLabel: t("workspace.cardLabel"),
         unknownUserLabel: t("common.unknownUser"),
         formatDateTime: (value) => formatDateTime(value, dateLocale),
