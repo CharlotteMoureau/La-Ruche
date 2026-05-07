@@ -229,13 +229,18 @@ export default function Toolbar({
     lastHandledExportSignalRef.current = exportSignal;
 
     if (exportOptions) {
+      if (hidden) {
+        handleExport(DEFAULT_EXPORT_SELECTIONS);
+        return;
+      }
+
       setExportWarning("");
       setShowExportMenu(true);
       return;
     }
 
     handleExport(DEFAULT_EXPORT_SELECTIONS);
-  }, [exportOptions, exportSignal, handleExport]);
+  }, [exportOptions, exportSignal, handleExport, hidden]);
 
   const toggleExportSelection = (key) => {
     setExportSelections((current) => ({
