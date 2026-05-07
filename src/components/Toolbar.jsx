@@ -66,6 +66,7 @@ export default function Toolbar({
   const [exportErrorMessage, setExportErrorMessage] = useState("");
   const lastHandledExportSignalRef = useRef(0);
   const exportMenuRef = useRef(null);
+  const exportDialogRef = useRef(null);
 
   const isValidEmail = (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
   const getRoleLabel = (role) => {
@@ -135,7 +136,11 @@ export default function Toolbar({
     if (!showExportMenu) return undefined;
 
     const handlePointerDown = (event) => {
-      if (!exportMenuRef.current?.contains(event.target)) {
+      const activeContainer = hidden
+        ? exportDialogRef.current
+        : exportMenuRef.current;
+
+      if (!activeContainer?.contains(event.target)) {
         setShowExportMenu(false);
       }
     };
@@ -153,7 +158,7 @@ export default function Toolbar({
       window.removeEventListener("mousedown", handlePointerDown);
       window.removeEventListener("keydown", handleEscape);
     };
-  }, [showExportMenu]);
+  }, [hidden, showExportMenu]);
 
   const getInvitationStatusLabel = (status) => {
     switch (status) {
@@ -229,11 +234,6 @@ export default function Toolbar({
     lastHandledExportSignalRef.current = exportSignal;
 
     if (exportOptions) {
-      if (hidden) {
-        handleExport(DEFAULT_EXPORT_SELECTIONS);
-        return;
-      }
-
       setExportWarning("");
       setShowExportMenu(true);
       return;
@@ -348,6 +348,60 @@ export default function Toolbar({
     setShowInviteModal(true);
   };
 
+  const exportMenuContent = (
+    <>
+      <p className="toolbar-export-menu__title">
+        {t("toolbar.exportMenuTitle")}
+      </p>
+      <label className="toolbar-export-option">
+        <input
+          type="checkbox"
+          checked={exportSelections.includeFrontBoard}
+          onChange={() => toggleExportSelection("includeFrontBoard")}
+        />
+        <span>{t("toolbar.exportOptionFrontBoard")}</span>
+      </label>
+      <label className="toolbar-export-option">
+        <input
+          type="checkbox"
+          checked={exportSelections.includeBackBoard}
+          onChange={() => toggleExportSelection("includeBackBoard")}
+        />
+        <span>{t("toolbar.exportOptionBackBoard")}</span>
+      </label>
+      <label className="toolbar-export-option">
+        <input
+          type="checkbox"
+          checked={exportSelections.includeCardNotes}
+          onChange={() => toggleExportSelection("includeCardNotes")}
+        />
+        <span>{t("toolbar.exportOptionCardNotes")}</span>
+      </label>
+      <label className="toolbar-export-option">
+        <input
+          type="checkbox"
+          checked={exportSelections.includeChat}
+          onChange={() => toggleExportSelection("includeChat")}
+        />
+        <span>{t("toolbar.exportOptionChat")}</span>
+      </label>
+      {exportWarning ? (
+        <p className="form-error toolbar-export-menu__warning">
+          {exportWarning}
+        </p>
+      ) : null}
+      <button
+        type="button"
+        className="toolbar-export-menu__submit"
+        onClick={() => handleExport()}
+        disabled={exportLoading}
+      >
+        <FontAwesomeIcon icon={faDownload} />
+        {exportLoading ? t("toolbar.exporting") : t("toolbar.export")}
+      </button>
+    </>
+  );
+
   return (
     <>
       <div className={`toolbar ${hidden ? "toolbar--hidden" : ""}`.trim()}>
@@ -380,57 +434,7 @@ export default function Toolbar({
             </button>
 
             {showExportMenu && exportOptions ? (
-              <div className="toolbar-export-menu">
-                <p className="toolbar-export-menu__title">
-                  {t("toolbar.exportMenuTitle")}
-                </p>
-                <label className="toolbar-export-option">
-                  <input
-                    type="checkbox"
-                    checked={exportSelections.includeFrontBoard}
-                    onChange={() => toggleExportSelection("includeFrontBoard")}
-                  />
-                  <span>{t("toolbar.exportOptionFrontBoard")}</span>
-                </label>
-                <label className="toolbar-export-option">
-                  <input
-                    type="checkbox"
-                    checked={exportSelections.includeBackBoard}
-                    onChange={() => toggleExportSelection("includeBackBoard")}
-                  />
-                  <span>{t("toolbar.exportOptionBackBoard")}</span>
-                </label>
-                <label className="toolbar-export-option">
-                  <input
-                    type="checkbox"
-                    checked={exportSelections.includeCardNotes}
-                    onChange={() => toggleExportSelection("includeCardNotes")}
-                  />
-                  <span>{t("toolbar.exportOptionCardNotes")}</span>
-                </label>
-                <label className="toolbar-export-option">
-                  <input
-                    type="checkbox"
-                    checked={exportSelections.includeChat}
-                    onChange={() => toggleExportSelection("includeChat")}
-                  />
-                  <span>{t("toolbar.exportOptionChat")}</span>
-                </label>
-                {exportWarning ? (
-                  <p className="form-error toolbar-export-menu__warning">
-                    {exportWarning}
-                  </p>
-                ) : null}
-                <button
-                  type="button"
-                  className="toolbar-export-menu__submit"
-                  onClick={() => handleExport()}
-                  disabled={exportLoading}
-                >
-                  <FontAwesomeIcon icon={faDownload} />
-                  {exportLoading ? t("toolbar.exporting") : t("toolbar.export")}
-                </button>
-              </div>
+              <div className="toolbar-export-menu">{exportMenuContent}</div>
             ) : null}
           </div>
         ) : null}
@@ -462,6 +466,34 @@ export default function Toolbar({
           </button>
         )}
       </div>
+
+      {hidden && showExportMenu && exportOptions ? (
+        <div
+          className="modal-overlay"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              setShowExportMenu(false);
+            }
+          }}
+        >
+          <div
+            ref={exportDialogRef}
+            className="modal-box toolbar-export-modal"
+          >
+            <button
+              type="button"
+              className="modal-close-btn"
+              onClick={() => setShowExportMenu(false)}
+              aria-label={t("common.close")}
+            >
+              ×
+            </button>
+            <div className="toolbar-export-menu toolbar-export-menu--dialog">
+              {exportMenuContent}
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       {showInviteModal ? (
         <div

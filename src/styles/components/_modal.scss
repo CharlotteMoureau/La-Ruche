@@ -545,6 +545,22 @@
   z-index: 1805;
 }
 
+.toolbar-export-modal {
+  text-align: left;
+  max-width: 360px;
+  width: min(94vw, 360px);
+}
+
+.toolbar-export-menu--dialog {
+  position: static;
+  min-width: 0;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
 .toolbar-export-menu__title {
   margin: 0 0 0.7rem;
   font-size: 0.95rem;
