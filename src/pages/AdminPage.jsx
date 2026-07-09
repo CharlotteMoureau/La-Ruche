@@ -725,6 +725,13 @@ export default function AdminPage() {
         <div className="inline-actions">
           <button
             type="button"
+            onClick={() => setUsersPage(1)}
+            disabled={usersPage === 1}
+          >
+            {t("common.first")}
+          </button>
+          <button
+            type="button"
             onClick={() => setUsersPage((p) => Math.max(1, p - 1))}
             disabled={usersPage === 1}
           >
@@ -741,6 +748,13 @@ export default function AdminPage() {
             disabled={usersPage === usersTotalPages}
           >
             {t("common.next")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setUsersPage(usersTotalPages)}
+            disabled={usersPage === usersTotalPages}
+          >
+            {t("common.last")}
           </button>
         </div>
       ) : null}
@@ -1070,6 +1084,13 @@ export default function AdminPage() {
         <div className="inline-actions">
           <button
             type="button"
+            onClick={() => setHivesPage(1)}
+            disabled={hivesPage === 1}
+          >
+            {t("common.first")}
+          </button>
+          <button
+            type="button"
             onClick={() => setHivesPage((p) => Math.max(1, p - 1))}
             disabled={hivesPage === 1}
           >
@@ -1086,6 +1107,13 @@ export default function AdminPage() {
             disabled={hivesPage === hivesTotalPages}
           >
             {t("common.next")}
+          </button>
+          <button
+            type="button"
+            onClick={() => setHivesPage(hivesTotalPages)}
+            disabled={hivesPage === hivesTotalPages}
+          >
+            {t("common.last")}
           </button>
         </div>
       ) : null}
