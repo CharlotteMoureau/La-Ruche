@@ -142,6 +142,8 @@ export const messages = {
       page: "Page",
       previous: "Précédent",
       next: "Suivant",
+      first: "Première page",
+      last: "Dernière page",
       charactersLeft: "{count} caractères restants",
       unknownUser: "Utilisateur inconnu",
       yes: "Oui",
@@ -235,7 +237,8 @@ export const messages = {
       goProfile: "Accéder au profil",
       createHive: "Créer une Ruche",
       learnMore: "En savoir plus",
-      learnMoreText: "Découvrez toutes les informations sur la ruche et ses différentes versions",
+      learnMoreText:
+        "Découvrez toutes les informations sur la ruche et ses différentes versions",
       signIn: "Se connecter",
       createAccount: "Créer un compte",
       tutorial: "Tutoriel",
@@ -253,8 +256,10 @@ export const messages = {
       info: "Explorez librement la Ruche. Vos modifications ne seront pas sauvegardées.",
       cta: "Créer un compte",
       landingTitle: "Tester sans compte",
-      landingDescription: "Découvrez la Ruche en version démo — glissez des cartes sur le plateau, sans avoir besoin d'un compte.",
-      exportScope: "Le téléchargement démo inclut uniquement le recto/verso du plateau (sans commentaires ni notes).",
+      landingDescription:
+        "Découvrez la Ruche en version démo — glissez des cartes sur le plateau, sans avoir besoin d'un compte.",
+      exportScope:
+        "Le téléchargement démo inclut uniquement le recto/verso du plateau (sans commentaires ni notes).",
     },
     login: {
       title: "Connexion",
@@ -754,6 +759,8 @@ export const messages = {
       page: "Page",
       previous: "Previous",
       next: "Next",
+      first: "First page",
+      last: "Last page",
       charactersLeft: "{count} characters left",
       unknownUser: "Unknown user",
       yes: "Yes",
@@ -840,7 +847,8 @@ export const messages = {
       goProfile: "Go to profile",
       createHive: "Create a Hive",
       learnMore: "Learn more",
-      learnMoreText: "Discover all the information about the hive and its different versions.",
+      learnMoreText:
+        "Discover all the information about the hive and its different versions.",
       signIn: "Log in",
       createAccount: "Create account",
       tutorial: "Tutorial",
@@ -857,8 +865,10 @@ export const messages = {
       info: "Freely explore La Ruche. Your changes won't be saved.",
       cta: "Create an account",
       landingTitle: "Try the demo",
-      landingDescription: "Discover La Ruche in demo mode — drag cards onto the board, no account needed.",
-      exportScope: "The demo download includes only the board front/back (no comments or notes).",
+      landingDescription:
+        "Discover La Ruche in demo mode — drag cards onto the board, no account needed.",
+      exportScope:
+        "The demo download includes only the board front/back (no comments or notes).",
     },
     login: {
       title: "Log in",
@@ -1338,6 +1348,8 @@ export const messages = {
       page: "Pagina",
       previous: "Vorige",
       next: "Volgende",
+      first: "Eerste pagina",
+      last: "Laatste pagina",
       charactersLeft: "{count} tekens over",
       unknownUser: "Onbekende gebruiker",
       yes: "Ja",
@@ -1447,8 +1459,10 @@ export const messages = {
       info: "Verken La Ruche vrij. Je wijzigingen worden niet opgeslagen.",
       cta: "Account aanmaken",
       landingTitle: "Demo proberen",
-      landingDescription: "Ontdek La Ruche in demomodus — sleep kaarten op het bord, zonder account.",
-      exportScope: "De demo-download bevat alleen de voor-/achterkant van het bord (geen opmerkingen of notities).",
+      landingDescription:
+        "Ontdek La Ruche in demomodus — sleep kaarten op het bord, zonder account.",
+      exportScope:
+        "De demo-download bevat alleen de voor-/achterkant van het bord (geen opmerkingen of notities).",
     },
     login: {
       title: "Aanmelden",
@@ -1762,7 +1776,8 @@ export const messages = {
       exportOptionBackBoard: "Achterkant van het bord",
       exportOptionCardNotes: "Kaartnotities",
       exportOptionChat: "Chat",
-      exportSelectAtLeastOne: "Selecteer minstens een onderdeel om te exporteren.",
+      exportSelectAtLeastOne:
+        "Selecteer minstens een onderdeel om te exporteren.",
       roleAdmin: "Beheerder",
       roleEdit: "Editor",
       roleComment: "Alleen reacties",
