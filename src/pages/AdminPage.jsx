@@ -1,5 +1,19 @@
 import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faAnglesLeft,
+  faAnglesRight,
+  faChevronDown,
+  faChevronLeft,
+  faChevronRight,
+  faChevronUp,
+  faEye,
+  faFloppyDisk,
+  faPen,
+  faTrash,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
 import { apiFetch } from "../lib/api";
 import { useAuth } from "../context/AuthContext";
 import UnifiedPromptModal from "../components/UnifiedPromptModal";
@@ -559,9 +573,12 @@ export default function AdminPage() {
                           )
                         }
                       >
+                        <FontAwesomeIcon
+                          icon={editingUser?.id === u.id ? faXmark : faPen}
+                        />
                         {editingUser?.id === u.id
-                          ? t("admin.cancelEdit")
-                          : t("admin.edit")}
+                          ? ` ${t("admin.cancelEdit")}`
+                          : ` ${t("admin.edit")}`}
                       </button>
                       <button
                         type="button"
@@ -571,7 +588,7 @@ export default function AdminPage() {
                           setDoubleConfirm(false);
                         }}
                       >
-                        {t("common.delete")}
+                        <FontAwesomeIcon icon={faTrash} /> {t("common.delete")}
                       </button>
                     </div>
                   </td>
@@ -702,13 +719,13 @@ export default function AdminPage() {
                               !editingUser.email?.trim()
                             }
                           >
-                            {t("admin.save")}
+                            <FontAwesomeIcon icon={faFloppyDisk} /> {t("admin.save")}
                           </button>
                           <button
                             type="button"
                             onClick={() => setEditingUser(null)}
                           >
-                            {t("common.cancel")}
+                            <FontAwesomeIcon icon={faXmark} /> {t("common.cancel")}
                           </button>
                         </div>
                       </form>
@@ -728,14 +745,14 @@ export default function AdminPage() {
             onClick={() => setUsersPage(1)}
             disabled={usersPage === 1}
           >
-            {t("common.first")}
+            <FontAwesomeIcon icon={faAnglesLeft} /> {t("common.first")}
           </button>
           <button
             type="button"
             onClick={() => setUsersPage((p) => Math.max(1, p - 1))}
             disabled={usersPage === 1}
           >
-            {t("common.previous")}
+            <FontAwesomeIcon icon={faChevronLeft} /> {t("common.previous")}
           </button>
           <span>
             {t("common.page")} {usersPage}/{usersTotalPages}
@@ -747,14 +764,14 @@ export default function AdminPage() {
             }
             disabled={usersPage === usersTotalPages}
           >
-            {t("common.next")}
+            {t("common.next")} <FontAwesomeIcon icon={faChevronRight} />
           </button>
           <button
             type="button"
             onClick={() => setUsersPage(usersTotalPages)}
             disabled={usersPage === usersTotalPages}
           >
-            {t("common.last")}
+            {t("common.last")} <FontAwesomeIcon icon={faAnglesRight} />
           </button>
         </div>
       ) : null}
@@ -876,7 +893,7 @@ export default function AdminPage() {
                           })
                         }
                       >
-                        {t("admin.viewHive")}
+                        <FontAwesomeIcon icon={faEye} /> {t("admin.viewHive")}
                       </button>
                       <button
                         type="button"
@@ -889,18 +906,24 @@ export default function AdminPage() {
                           )
                         }
                       >
+                        <FontAwesomeIcon
+                          icon={editingHive?.id === hive.id ? faXmark : faPen}
+                        />
                         {editingHive?.id === hive.id
-                          ? t("admin.cancelEdit")
-                          : t("admin.edit")}
+                          ? ` ${t("admin.cancelEdit")}`
+                          : ` ${t("admin.edit")}`}
                       </button>
                       <button
                         type="button"
                         className="button-link"
                         onClick={() => toggleHiveDetails(hive.id)}
                       >
+                        <FontAwesomeIcon
+                          icon={expandedHiveId === hive.id ? faChevronUp : faChevronDown}
+                        />
                         {expandedHiveId === hive.id
-                          ? t("admin.cancelEdit")
-                          : t("admin.hiveDetails")}
+                          ? ` ${t("admin.cancelEdit")}`
+                          : ` ${t("admin.hiveDetails")}`}
                       </button>
                       <button
                         type="button"
@@ -909,7 +932,7 @@ export default function AdminPage() {
                           setDeleteTarget({ type: "hive", id: hive.id })
                         }
                       >
-                        {t("common.delete")}
+                        <FontAwesomeIcon icon={faTrash} /> {t("common.delete")}
                       </button>
                     </div>
                   </td>
@@ -947,13 +970,13 @@ export default function AdminPage() {
                             className="button-link"
                             disabled={!editingHive.title.trim()}
                           >
-                            {t("admin.save")}
+                            <FontAwesomeIcon icon={faFloppyDisk} /> {t("admin.save")}
                           </button>
                           <button
                             type="button"
                             onClick={() => setEditingHive(null)}
                           >
-                            {t("common.cancel")}
+                            <FontAwesomeIcon icon={faXmark} /> {t("common.cancel")}
                           </button>
                         </div>
                       </form>
@@ -990,7 +1013,7 @@ export default function AdminPage() {
                                           })
                                         }
                                       >
-                                        {t("admin.removeCollaborator")}
+                                        <FontAwesomeIcon icon={faTrash} /> {t("admin.removeCollaborator")}
                                       </button>
                                     </td>
                                   </tr>
@@ -1028,7 +1051,7 @@ export default function AdminPage() {
                                             })
                                           }
                                         >
-                                          {t("common.delete")}
+                                          <FontAwesomeIcon icon={faTrash} /> {t("common.delete")}
                                         </button>
                                       </td>
                                     </tr>
@@ -1059,7 +1082,7 @@ export default function AdminPage() {
                                               })
                                             }
                                           >
-                                            {t("common.delete")}
+                                            <FontAwesomeIcon icon={faTrash} /> {t("common.delete")}
                                           </button>
                                         </td>
                                       </tr>
@@ -1087,14 +1110,14 @@ export default function AdminPage() {
             onClick={() => setHivesPage(1)}
             disabled={hivesPage === 1}
           >
-            {t("common.first")}
+            <FontAwesomeIcon icon={faAnglesLeft} /> {t("common.first")}
           </button>
           <button
             type="button"
             onClick={() => setHivesPage((p) => Math.max(1, p - 1))}
             disabled={hivesPage === 1}
           >
-            {t("common.previous")}
+            <FontAwesomeIcon icon={faChevronLeft} /> {t("common.previous")}
           </button>
           <span>
             {t("common.page")} {hivesPage}/{hivesTotalPages}
@@ -1106,14 +1129,14 @@ export default function AdminPage() {
             }
             disabled={hivesPage === hivesTotalPages}
           >
-            {t("common.next")}
+            {t("common.next")} <FontAwesomeIcon icon={faChevronRight} />
           </button>
           <button
             type="button"
             onClick={() => setHivesPage(hivesTotalPages)}
             disabled={hivesPage === hivesTotalPages}
           >
-            {t("common.last")}
+            {t("common.last")} <FontAwesomeIcon icon={faAnglesRight} />
           </button>
         </div>
       ) : null}
@@ -1161,9 +1184,10 @@ export default function AdminPage() {
           />
           <div className="inline-actions">
             <button type="submit" className="button-link" disabled={isUpdatingPassword}>
+              <FontAwesomeIcon icon={faFloppyDisk} />
               {isUpdatingPassword
-                ? t("common.loading")
-                : t("profile.updatePassword")}
+                ? ` ${t("common.loading")}`
+                : ` ${t("profile.updatePassword")}`}
             </button>
           </div>
         </form>
