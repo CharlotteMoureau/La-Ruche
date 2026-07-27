@@ -8,6 +8,7 @@ import {
   faChevronLeft,
   faChevronRight,
   faChevronUp,
+  faDownload,
   faEye,
   faFloppyDisk,
   faPen,
@@ -19,6 +20,7 @@ import { useAuth } from "../context/AuthContext";
 import UnifiedPromptModal from "../components/UnifiedPromptModal";
 import PasswordField from "../components/PasswordField";
 import { useLanguage } from "../context/LanguageContext";
+import { triggerDownload } from "../lib/snapshot";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -34,6 +36,38 @@ function formatDate(value, locale) {
     dateStyle: "medium",
     timeStyle: "short",
   }).format(d);
+}
+
+function escapeHtml(value) {
+  if (value == null) return "";
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function createExcelHtml(title, headers, rows) {
+  const headerCells = headers.map((header) => `<th>${escapeHtml(header)}</th>`).join("");
+  const rowCells = rows
+    .map(
+      (row) =>
+        `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`,
+    )
+    .join("");
+
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8" /></head><body><table><caption>${escapeHtml(
+    title,
+  )}</caption><thead><tr>${headerCells}</tr></thead><tbody>${rowCells}</tbody></table></body></html>`;
+}
+
+function exportExcelFile(fileName, title, headers, rows) {
+  const html = createExcelHtml(title, headers, rows);
+  const blob = new Blob([html], {
+    type: "application/vnd.ms-excel;charset=utf-8",
+  });
+  triggerDownload(blob, fileName);
 }
 
 export default function AdminPage() {
@@ -227,6 +261,71 @@ export default function AdminPage() {
     return list;
   }, [hives, hiveSearch, hiveSort]);
 
+  const getUserRoleLabel = (user) => {
+    const role = translateRole(user.roleLabel);
+    return user.roleLabel === "Autre" && user.roleOtherText
+      ? `${role} (${user.roleOtherText})`
+      : role;
+  };
+
+  const handleExportUsers = () => {
+    const headers = [
+      t("admin.user"),
+      t("profile.firstname"),
+      t("profile.lastname"),
+      t("profile.email"),
+      t("admin.role"),
+      t("admin.hiveCount"),
+      t("admin.collabs"),
+      t("admin.createdAt"),
+      t("admin.lastActivityAt"),
+    ];
+    const rows = filteredUsers.map((u) => [
+      u.username,
+      u.firstName || "",
+      u.lastName || "",
+      u.email,
+      getUserRoleLabel(u),
+      String(u._count.hives),
+      String(u._count.collaborations),
+      formatDate(u.createdAt, dateLocale),
+      formatDate(u.lastActivityAt, dateLocale),
+    ]);
+
+    exportExcelFile(
+      `users-${new Date().toISOString().slice(0, 10)}.xls`,
+      t("admin.users"),
+      headers,
+      rows,
+    );
+  };
+
+  const handleExportHives = () => {
+    const headers = [
+      t("admin.titleLabel"),
+      t("admin.owner"),
+      t("admin.collabs"),
+      t("admin.comments"),
+      t("profile.createdAt"),
+      t("profile.updatedAt"),
+    ];
+    const rows = filteredHives.map((hive) => [
+      hive.title,
+      hive.owner?.username || "",
+      String(hive._count.collaborators),
+      String(hive._count.comments),
+      formatDate(hive.createdAt, dateLocale),
+      formatDate(hive.updatedAt, dateLocale),
+    ]);
+
+    exportExcelFile(
+      `hives-${new Date().toISOString().slice(0, 10)}.xls`,
+      t("admin.hives"),
+      headers,
+      rows,
+    );
+  };
+
   useEffect(() => {
     setUsersPage((p) => Math.min(p, getTotalPages(filteredUsers.length)));
   }, [filteredUsers.length]);
@@ -419,6 +518,13 @@ export default function AdminPage() {
             setUsersPage(1);
           }}
         />
+        <button
+          type="button"
+          className="button-link"
+          onClick={handleExportUsers}
+        >
+          <FontAwesomeIcon icon={faDownload} /> {t("admin.exportUsers")}
+        </button>
       </div>
 
       <div className="admin-table-wrap">
@@ -793,6 +899,13 @@ export default function AdminPage() {
             setHivesPage(1);
           }}
         />
+        <button
+          type="button"
+          className="button-link"
+          onClick={handleExportHives}
+        >
+          <FontAwesomeIcon icon={faDownload} /> {t("admin.exportHives")}
+        </button>
       </div>
 
       <div className="admin-table-wrap">

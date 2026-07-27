@@ -450,6 +450,8 @@ export const messages = {
       removingCollaborator: "Retrait...",
       deletingComment: "Suppression du commentaire...",
       changePassword: "Changer mon mot de passe",
+      exportUsers: "Exporter les utilisateurs",
+      exportHives: "Exporter les ruches",
     },
     editor: {
       newHiveTitle: "Nouvelle Ruche",
@@ -1053,6 +1055,8 @@ export const messages = {
       removingCollaborator: "Removing...",
       deletingComment: "Deleting comment...",
       changePassword: "Change my password",
+      exportUsers: "Export users",
+      exportHives: "Export hives",
     },
     editor: {
       newHiveTitle: "New Hive",
@@ -1645,6 +1649,8 @@ export const messages = {
       removingCollaborator: "Bezig met verwijderen...",
       deletingComment: "Reactie verwijderen...",
       changePassword: "Mijn wachtwoord wijzigen",
+      exportUsers: "Gebruikers exporteren",
+      exportHives: "Bijenkorfen exporteren",
     },
     editor: {
       newHiveTitle: "Nieuwe Bijenkorf",
