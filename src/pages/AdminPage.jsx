@@ -21,6 +21,7 @@ import UnifiedPromptModal from "../components/UnifiedPromptModal";
 import PasswordField from "../components/PasswordField";
 import { useLanguage } from "../context/LanguageContext";
 import { triggerDownload } from "../lib/snapshot";
+import JSZip from "jszip";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -38,35 +39,97 @@ function formatDate(value, locale) {
   }).format(d);
 }
 
-function escapeHtml(value) {
+function escapeXml(value) {
   if (value == null) return "";
   return String(value)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+    .replace(/'/g, "&apos;");
 }
 
-function createExcelHtml(title, headers, rows) {
-  const headerCells = headers.map((header) => `<th>${escapeHtml(header)}</th>`).join("");
-  const rowCells = rows
-    .map(
-      (row) =>
-        `<tr>${row.map((cell) => `<td>${escapeHtml(cell)}</td>`).join("")}</tr>`,
-    )
+function getColumnLetter(columnIndex) {
+  let result = "";
+  let index = columnIndex;
+  while (index >= 0) {
+    result = String.fromCharCode(65 + (index % 26)) + result;
+    index = Math.floor(index / 26) - 1;
+  }
+  return result;
+}
+
+function buildWorksheetXml(title, headers, rows) {
+  const headerRow = `<row r="1">${headers
+    .map((header, columnIndex) => {
+      const cellRef = `${getColumnLetter(columnIndex)}1`;
+      return `<c r="${cellRef}" t="inlineStr"><is><t>${escapeXml(header)}</t></is></c>`;
+    })
+    .join("")}</row>`;
+
+  const dataRows = rows
+    .map((row, rowIndex) => {
+      const rowNumber = rowIndex + 2;
+      const cells = row
+        .map((cell, columnIndex) => {
+          const cellRef = `${getColumnLetter(columnIndex)}${rowNumber}`;
+          return `<c r="${cellRef}" t="inlineStr"><is><t>${escapeXml(cell)}</t></is></c>`;
+        })
+        .join("");
+      return `<row r="${rowNumber}">${cells}</row>`;
+    })
     .join("");
 
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8" /></head><body><table><caption>${escapeHtml(
-    title,
-  )}</caption><thead><tr>${headerCells}</tr></thead><tbody>${rowCells}</tbody></table></body></html>`;
+  return (`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ` +
+    `xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">` +
+    `<sheetData>${headerRow}${dataRows}</sheetData></worksheet>`);
 }
 
-function exportExcelFile(fileName, title, headers, rows) {
-  const html = createExcelHtml(title, headers, rows);
-  const blob = new Blob([html], {
-    type: "application/vnd.ms-excel;charset=utf-8",
-  });
+function buildWorkbookXml() {
+  return (`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" ` +
+    `xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">` +
+    `<sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets></workbook>`);
+}
+
+function buildWorkbookRelsXml() {
+  return (`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">` +
+    `<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>` +
+    `</Relationships>`);
+}
+
+function buildRootRelsXml() {
+  return (`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">` +
+    `<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>` +
+    `</Relationships>`);
+}
+
+function buildContentTypesXml() {
+  return (`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>` +
+    `<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">` +
+    `<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>` +
+    `<Default Extension="xml" ContentType="application/xml"/>` +
+    `<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>` +
+    `<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>` +
+    `</Types>`);
+}
+
+async function createXlsxBlob(title, headers, rows) {
+  const zip = new JSZip();
+  zip.file("[Content_Types].xml", buildContentTypesXml());
+  zip.folder("_rels").file(".rels", buildRootRelsXml());
+  const xl = zip.folder("xl");
+  xl.file("workbook.xml", buildWorkbookXml());
+  xl.folder("_rels").file("workbook.xml.rels", buildWorkbookRelsXml());
+  xl.folder("worksheets").file("sheet1.xml", buildWorksheetXml(title, headers, rows));
+  return zip.generateAsync({ type: "blob" });
+}
+
+async function exportExcelFile(fileName, title, headers, rows) {
+  const blob = await createXlsxBlob(title, headers, rows);
   triggerDownload(blob, fileName);
 }
 
@@ -268,7 +331,7 @@ export default function AdminPage() {
       : role;
   };
 
-  const handleExportUsers = () => {
+  const handleExportUsers = async () => {
     const headers = [
       t("admin.user"),
       t("profile.firstname"),
@@ -292,15 +355,15 @@ export default function AdminPage() {
       formatDate(u.lastActivityAt, dateLocale),
     ]);
 
-    exportExcelFile(
-      `users-${new Date().toISOString().slice(0, 10)}.xls`,
+    await exportExcelFile(
+      `users-${new Date().toISOString().slice(0, 10)}.xlsx`,
       t("admin.users"),
       headers,
       rows,
     );
   };
 
-  const handleExportHives = () => {
+  const handleExportHives = async () => {
     const headers = [
       t("admin.titleLabel"),
       t("admin.owner"),
@@ -318,8 +381,8 @@ export default function AdminPage() {
       formatDate(hive.updatedAt, dateLocale),
     ]);
 
-    exportExcelFile(
-      `hives-${new Date().toISOString().slice(0, 10)}.xls`,
+    await exportExcelFile(
+      `hives-${new Date().toISOString().slice(0, 10)}.xlsx`,
       t("admin.hives"),
       headers,
       rows,
